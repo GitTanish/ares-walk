@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Raw planetary rasters stay local (HiRISE/THEMIS/CRISM products can be many GB)
+data/raw/*.tif
+data/raw/*.tiff
+data/raw/*.TIF
+data/raw/*.TIFF
+data/raw/*.IMG
+data/raw/*.img
+data/raw/*.jp2
+data/raw/*.vrt
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
