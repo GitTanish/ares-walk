@@ -834,30 +834,20 @@
     align-items: center;
     justify-content: center;
   }
+  /* Small centre crosshair; the true horizon is drawn by the panorama itself. */
   .horizon-line {
-    width: 44%;
-    max-width: 460px;
+    width: 22px;
     height: 1px;
-    background: rgba(236, 239, 244, 0.28);
+    background: rgba(236, 244, 255, 0.55);
     position: relative;
   }
-  .horizon-line::before, .horizon-line::after {
-    content: "";
-    position: absolute;
-    top: -4px;
-    width: 1px;
-    height: 9px;
-    background: rgba(236, 239, 244, 0.45);
-  }
-  .horizon-line::before { left: 0; }
-  .horizon-line::after { right: 0; }
   .center-tick {
     position: absolute;
     left: 50%;
-    top: -7px;
+    top: -11px;
     width: 1px;
-    height: 15px;
-    background: var(--accent);
+    height: 23px;
+    background: rgba(236, 244, 255, 0.55);
   }
 
   /* Visor Top Telemetry Bar */
@@ -2366,6 +2356,23 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
     return (h >>> 0) / 4294967296;
   }
 
+  // Lattice hash and smooth value noise: world-anchored, so ground texture stays
+  // fixed to the terrain while the view rotates.
+  function latticeHash(a, b) {
+    let n = Math.imul(a, 374761393) + Math.imul(b, 668265263);
+    n = Math.imul(n ^ (n >>> 13), 1274126177);
+    return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
+  }
+
+  function vnoise(x, y) {
+    const xi = Math.floor(x), yi = Math.floor(y);
+    const xf = x - xi, yf = y - yi;
+    const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+    const a = latticeHash(xi, yi), b = latticeHash(xi + 1, yi);
+    const c = latticeHash(xi, yi + 1), d = latticeHash(xi + 1, yi + 1);
+    return (a + (b - a) * u) * (1 - v) + (c + (d - c) * u) * v;
+  }
+
   function heightAtWorldBilinear(x, y) {
     const gx = (x - S.x0) / S.cell - 0.5;
     const gy = (y - S.y0) / S.cell - 0.5;
@@ -2502,8 +2509,9 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
         skyline = [136 + jit, 116 + jit, 97 + jit];
       }
 
-      const rimH = 150 + 72 * Math.sin(a * 1.7 + 1.3) + 38 * Math.sin(a * 4.3 + 3.1) + 16 * Math.sin(a * 9.7 + 0.4);
-      const rimProfile = (aa) => 150 + 72 * Math.sin(aa * 1.7 + 1.3) + 38 * Math.sin(aa * 4.3 + 3.1) + 16 * Math.sin(aa * 9.7 + 0.4);
+      const rimProfile = (aa) => 150 + 72 * Math.sin(aa * 1.7 + 1.3) + 38 * Math.sin(aa * 4.3 + 3.1) + 16 * Math.sin(aa * 9.7 + 0.4) +
+        9 * Math.sin(aa * 31.7 + 0.9) + 5 * Math.sin(aa * 57.3 + 2.2);
+      const rimH = rimProfile(a);
       const rimSlope = rimProfile(a + 0.01) - rimProfile(a - 0.01);
       const rimAng = Math.atan2(rimH - cam.z, 16000);
       if (rimAng > bestAng) {
@@ -2520,7 +2528,9 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
           980 * Math.exp(-Math.pow(normalizeDeg(az - 247) / 20, 2)) +
           720 * Math.exp(-Math.pow(normalizeDeg(az - 230) / 14, 2)) +
           560 * Math.exp(-Math.pow(normalizeDeg(az - 263) / 12, 2)) +
-          34 * Math.sin((az - 238) * DEG * 18 + 1.3)) * massifGate;
+          34 * Math.sin((az - 238) * DEG * 18 + 1.3) +
+          26 * Math.sin((az - 238) * DEG * 53 + 2.1) +
+          14 * Math.sin((az - 238) * DEG * 131 + 0.4)) * massifGate;
       const massifH = 20 + massifProfile(azDeg);
       const massifSlope = massifProfile(azDeg + 0.4) - massifProfile(azDeg - 0.4);
       const massifAng = Math.atan2(massifH - cam.z, 5200);
@@ -2553,9 +2563,6 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
     // Soften per-cell color steps; far bands need the strongest blur.
     const blurRadii = [26, 16, 8, 4, 2, 1, 0, 0, 0];
     for (let k = 0; k < bands.length; k++) smoothBand(bands[k], N, blurRadii[k] || 0);
-    for (let k = 0; k < bands.length; k++) {
-      for (let i = 0; i < N; i++) bands[k][i] = cssRgb(bands[k][i]);
-    }
 
     // Modeled boulders, occluded by nearer ridges.
     const boulders = [];
@@ -2604,6 +2611,625 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
     S.pano.sceneKey = String(S.current);
   }
 
+  /* ---------------- WebGL2 terrain renderer ----------------
+     Ray-marches the terrain-twin heightfield per pixel and draws the sky, ground,
+     rocks, shadows and distant Mount Sharp backdrop into an offscreen canvas that
+     drawPano() composites under the 2D overlays. The camera model is identical to
+     the canvas path (azimuth = heading + atan(dx/f), elevation = pitch + atan(dy/f)),
+     so the route ribbon, station markers and compass stay registered. If WebGL2 or
+     shader compilation is unavailable, drawPano() falls back to the canvas renderer. */
+  const PANO_GL_VS = `#version 300 es
+void main() {
+  vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2));
+  gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+}`;
+
+  const PANO_GL_FS = `#version 300 es
+precision highp float;
+precision highp int;
+precision highp sampler2D;
+
+out vec4 fragColor;
+
+uniform vec2 uRes;
+uniform float uFocal;
+uniform float uHeading;
+uniform float uPitch;
+uniform vec3 uCam;
+uniform vec3 uSun;
+uniform vec4 uGrid;
+uniform vec2 uWorld;
+uniform ivec2 uTexSize;
+uniform float uZOff;
+uniform float uMaxH;
+uniform vec4 uBoulder[16];
+uniform int uBoulderN;
+uniform sampler2D uHeight;
+uniform sampler2D uMat;
+
+const float PI = 3.14159265;
+const float TAU = 6.28318531;
+const float MAX_T = 2600.0;
+const vec3 SUNC = vec3(1.0, 0.86, 0.68) * 2.7;
+const vec3 AMB_UP = vec3(0.30, 0.205, 0.135);
+const vec3 AMB_DN = vec3(0.115, 0.075, 0.050);
+
+vec3 srgb(vec3 c) { return pow(c, vec3(2.2)); }
+float sq(float x) { return x * x; }
+
+uvec2 pcg2d(uvec2 v) {
+  v = v * 1664525u + 1013904223u;
+  v.x += v.y * 1664525u;
+  v.y += v.x * 1664525u;
+  v ^= v >> 16u;
+  v.x += v.y * 1664525u;
+  v.y += v.x * 1664525u;
+  v ^= v >> 16u;
+  return v;
+}
+float h1(vec2 i) { return float(pcg2d(uvec2(ivec2(i))).x >> 8u) * (1.0 / 16777216.0); }
+vec4 h4(vec2 i, uint s) {
+  uvec2 a = pcg2d(uvec2(ivec2(i)) + uvec2(s * 747796405u, s * 2891336453u + 12345u));
+  uvec2 b = pcg2d(a ^ uvec2(0x68e31da4u, 0xb5297a4du));
+  return vec4(float(a.x >> 8u), float(a.y >> 8u), float(b.x >> 8u), float(b.y >> 8u)) * (1.0 / 16777216.0);
+}
+float vn(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  float a = h1(i);
+  float b = h1(i + vec2(1.0, 0.0));
+  float c = h1(i + vec2(0.0, 1.0));
+  float d = h1(i + vec2(1.0, 1.0));
+  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+}
+float fbm(vec2 p) {
+  float a = 0.5;
+  float s = 0.0;
+  mat2 r = mat2(0.8, -0.6, 0.6, 0.8);
+  for (int i = 0; i < 5; i++) {
+    s += a * vn(p);
+    p = r * p * 2.03 + 11.7;
+    a *= 0.5;
+  }
+  return s;
+}
+
+/* ---- terrain data ---- */
+float texH(ivec2 i) { return texelFetch(uHeight, clamp(i, ivec2(0), uTexSize - 1), 0).r; }
+float terrainTex(vec2 p) {
+  vec2 q = (p - uGrid.xy) * (uGrid.w / uGrid.z) - 0.5;
+  vec2 f = fract(q);
+  ivec2 i = ivec2(floor(q));
+  float a = texH(i);
+  float b = texH(i + ivec2(1, 0));
+  float c = texH(i + ivec2(0, 1));
+  float d = texH(i + ivec2(1, 1));
+  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+}
+float baseH(vec2 p) {
+  vec2 lo = uGrid.xy;
+  vec2 hi = uGrid.xy + uWorld;
+  vec2 pc = clamp(p, lo, hi);
+  float h = terrainTex(pc);
+  float od = length(p - pc);
+  if (od > 0.0) {
+    float far = h + (fbm(p * 0.0021 + 3.1) - 0.5) * 140.0;
+    h = mix(h, far, smoothstep(0.0, 350.0, od));
+  }
+  return h + uZOff;
+}
+
+/* Faceted rock: flat-topped polyhedron from three tilted planes, flared skirt. */
+vec2 rockProfile(vec2 d, vec4 r, float rad, float H) {
+  float ang = r.x * TAU;
+  float ca = cos(ang);
+  float sa = sin(ang);
+  vec2 e = vec2(ca * d.x + sa * d.y, -sa * d.x + ca * d.y);
+  e.x /= 1.0 + 0.45 * r.y;
+  float rr = length(e) / rad;
+  if (rr >= 1.0) return vec2(-1.0, rr);
+  float g = H / rad;
+  float a1 = r.z * TAU;
+  vec2 g1 = vec2(cos(a1), sin(a1)) * g * (0.8 + r.w);
+  vec2 g2 = vec2(cos(a1 + 2.2), sin(a1 + 2.2)) * g * (0.8 + fract(r.w * 7.13));
+  vec2 g3 = vec2(cos(a1 + 4.1), sin(a1 + 4.1)) * g * (0.8 + fract(r.w * 13.7));
+  float top = min(min(1.35 * H - dot(e, g1), 1.35 * H - dot(e, g2)), min(1.35 * H - dot(e, g3), H));
+  float skirt = (1.0 - rr) * H * 2.6;
+  return vec2(max(min(top, skirt), 0.0), rr);
+}
+
+struct Surf {
+  float h;
+  float rockH;
+  float tone;
+  float ao;
+};
+
+/* Terrain height with procedural relief. lodK scales the sub-pixel cutoff: larger
+   values drop fine detail sooner (cheap marching), smaller keep it (shading). */
+Surf heightAt(vec2 p, float t, float lodK) {
+  Surf s;
+  float px = t / uFocal;
+  float minAmp = px * lodK;
+  float base = baseH(p);
+  float dc = length(p - uCam.xy);
+  float macro = smoothstep(2.0, 50.0, dc);
+  float nf = smoothstep(0.7, 4.0, t);
+  vec4 m = texture(uMat, clamp((p - uGrid.xy) / uWorld, 0.002, 0.998));
+  float sand = m.r;
+  float rockiness = clamp(0.22 + 0.95 * m.g - 0.85 * sand + 0.35 * m.b, 0.04, 1.0);
+  float rough = mix(0.55, 1.35, rockiness);
+
+  float dh = 0.0;
+  float lam = 48.0;
+  vec2 q = p / 48.0;
+  mat2 R = mat2(0.8, -0.6, 0.6, 0.8);
+  for (int o = 0; o < 7; o++) {
+    float a = 0.014 * lam * rough;
+    if (a < minAmp) break;
+    float w = lam > 14.0 ? macro : nf;
+    float f = smoothstep(minAmp, minAmp * 3.0, a);
+    dh += (vn(q) - 0.5) * 2.0 * a * w * f;
+    q = R * q * 2.381 + 7.7;
+    lam *= 0.42;
+  }
+  if (sand > 0.25 && 0.03 >= minAmp) {
+    float ph = dot(p, vec2(0.766, 0.643)) / 0.9 * TAU + (vn(p / 3.0) - 0.5) * 5.0 + (vn(p / 0.8) - 0.5) * 1.6;
+    dh += sin(ph) * 0.03 * sand * nf * smoothstep(minAmp, minAmp * 3.0, 0.03);
+  }
+
+  float rockH = 0.0;
+  float tone = 0.5;
+  float ao = 1.0;
+  for (int k = 0; k < 5; k++) {
+    float c = 0.16 * pow(2.62, float(k));
+    float rad = c * 0.2;
+    if (rad < minAmp) continue;
+    vec2 id = floor(p / c);
+    vec4 mc = texture(uMat, clamp(((id + 0.5) * c - uGrid.xy) / uWorld, 0.002, 0.998));
+    float rk = clamp(0.22 + 0.95 * mc.g - 0.85 * mc.r + 0.35 * mc.b, 0.04, 1.0);
+    float dens = 0.62 * pow(0.62, float(k)) * rk;
+    uvec2 ha = pcg2d(uvec2(ivec2(id)) + uvec2(uint(k) * 747796405u + 11u, uint(k) * 2891336453u + 12345u));
+    float ex = float(ha.x >> 8u) * (1.0 / 16777216.0);
+    if (ex > dens) continue;
+    uvec2 hb = pcg2d(ha ^ uvec2(0x68e31da4u, 0xb5297a4du));
+    vec4 r = vec4(ex, float(ha.y >> 8u), float(hb.x >> 8u), float(hb.y >> 8u)) * (1.0 / 16777216.0);
+    r.x = float(ha.x >> 8u) * (1.0 / 16777216.0);
+    vec2 off = (r.yz - 0.5) * 0.24;
+    vec2 d = (fract(p / c) - 0.5 - off) * c;
+    float rr0 = c * (0.09 + 0.11 * r.w);
+    vec4 r2 = h4(id, uint(k) + 71u);
+    float H = rr0 * (0.4 + 0.6 * r2.x);
+    vec2 hr = rockProfile(d, r2, rr0, H);
+    if (hr.x > 0.0) {
+      float hh = hr.x * nf;
+      if (hh > rockH) { rockH = hh; tone = r2.y; }
+      ao = min(ao, mix(0.5, 1.0, smoothstep(0.0, 0.3 * H, hr.x)));
+    } else {
+      ao *= 1.0 - 0.42 * (1.0 - smoothstep(1.0, 1.4, hr.y)) * nf;
+    }
+  }
+  for (int i = 0; i < 16; i++) {
+    if (i >= uBoulderN) break;
+    vec4 b = uBoulder[i];
+    vec2 d = p - b.xy;
+    float R0 = b.z;
+    if (dot(d, d) > R0 * R0 * 2.6) continue;
+    vec4 r2 = h4(vec2(b.w), 91u);
+    float rad = R0 * 0.8;
+    float H = R0 * (0.55 + 0.45 * r2.x);
+    vec2 hr = rockProfile(d, r2, rad, H);
+    float bz = baseH(b.xy);
+    if (hr.x > 0.0) {
+      float hh = bz + hr.x - 0.15 * H - (base + dh);
+      if (hh > rockH) { rockH = hh; tone = r2.y; }
+      ao = min(ao, mix(0.5, 1.0, smoothstep(0.0, 0.3 * H, hr.x)));
+    } else {
+      ao *= 1.0 - 0.42 * (1.0 - smoothstep(1.0, 1.4, hr.y));
+    }
+  }
+  rockH = max(rockH, 0.0);
+  s.h = base + dh + rockH;
+  s.rockH = rockH;
+  s.tone = tone;
+  s.ao = ao;
+  return s;
+}
+
+float softShadow(vec3 p, vec3 n, float t0) {
+  float px = t0 / uFocal;
+  vec3 ro = p + n * max(0.03, px * 1.5);
+  float res = 1.0;
+  float s = max(0.06, px * 1.2);
+  for (int i = 0; i < 34; i++) {
+    vec3 q = ro + uSun * s;
+    if (q.z > uMaxH) break;
+    float dz = q.z - heightAt(q.xy, t0, 3.0).h;
+    res = min(res, clamp(5.0 * dz / s, 0.0, 1.0));
+    if (res < 0.02) return 0.0;
+    s += max(0.05, s * 0.17 + max(dz, 0.0) * 0.25);
+  }
+  return res * res * (3.0 - 2.0 * res);
+}
+
+/* ---- sky and atmosphere ---- */
+vec3 skyColor(vec3 rd, bool detail) {
+  float up = clamp(rd.z, 0.0, 1.0);
+  float tg = sqrt(up);
+  vec3 hor = srgb(vec3(0.86, 0.69, 0.49)) * 0.95;
+  vec3 mid = srgb(vec3(0.66, 0.47, 0.32)) * 0.62;
+  vec3 zen = srgb(vec3(0.40, 0.29, 0.22)) * 0.38;
+  vec3 c = mix(hor, mid, smoothstep(0.0, 0.42, tg));
+  c = mix(c, zen, smoothstep(0.32, 1.0, tg));
+  float mu = max(dot(rd, uSun), 0.0);
+  c += vec3(1.0, 0.76, 0.50) * (0.50 * pow(mu, 5.0) + 0.85 * pow(mu, 36.0));
+  c += vec3(0.50, 0.68, 1.0) * pow(mu, 420.0) * 0.8;
+  if (detail && rd.z > 0.02) {
+    vec2 uv = rd.xy / (rd.z + 0.18) * 1.7;
+    float cl = fbm(uv * vec2(1.6, 4.2) + vec2(4.0, 1.0));
+    cl = smoothstep(0.54, 0.82, cl) * smoothstep(0.02, 0.25, rd.z) * 0.22;
+    c += mix(vec3(0.55, 0.40, 0.29), vec3(0.95, 0.80, 0.64), pow(mu, 3.0)) * cl;
+  }
+  return c;
+}
+vec3 hazeCol(vec3 rd) { return skyColor(normalize(vec3(rd.xy, 0.03)), false); }
+float fogAmt(float d) { return 1.0 - exp(-d * 0.00033); }
+
+/* ---- distant backdrop: mid hills, Mount Sharp massif, crater rim ---- */
+float nd(float d) { return mod(d + 180.0, 360.0) - 180.0; }
+float midProfile(float a) {
+  return 42.0 + 34.0 * sin(a * 3.1 + 0.4) + 17.0 * sin(a * 7.3 + 2.0) + 8.0 * sin(a * 13.7 + 1.1) +
+    10.0 * (vn(vec2(a * 38.0, 1.3)) - 0.5);
+}
+float rimProfile(float a) {
+  return 150.0 + 72.0 * sin(a * 1.7 + 1.3) + 38.0 * sin(a * 4.3 + 3.1) + 16.0 * sin(a * 9.7 + 0.4) +
+    9.0 * sin(a * 31.7 + 0.9) + 5.0 * sin(a * 57.3 + 2.2);
+}
+float massifProfile(float azDeg) {
+  float gate = exp(-sq(nd(azDeg - 244.0) / 70.0));
+  float dd = radians(azDeg - 238.0);
+  float v = 26.0 +
+    980.0 * exp(-sq(nd(azDeg - 247.0) / 20.0)) +
+    720.0 * exp(-sq(nd(azDeg - 230.0) / 14.0)) +
+    560.0 * exp(-sq(nd(azDeg - 263.0) / 12.0)) +
+    34.0 * sin(dd * 18.0 + 1.3) + 26.0 * sin(dd * 53.0 + 2.1) + 14.0 * sin(dd * 131.0 + 0.4) +
+    70.0 * (vn(vec2(azDeg * 1.7, 4.1)) - 0.5) + 34.0 * (vn(vec2(azDeg * 6.1, 9.7)) - 0.5) +
+    14.0 * (vn(vec2(azDeg * 21.0, 2.3)) - 0.5);
+  return 20.0 + v * gate;
+}
+
+float layerProfile(int L, float azDeg) {
+  if (L == 0) return midProfile(radians(azDeg));
+  if (L == 1) return massifProfile(azDeg);
+  return rimProfile(radians(azDeg));
+}
+
+vec4 layerShade(int L, vec3 ro, vec3 rd, float azDeg, float tanE) {
+  float D = L == 0 ? 2600.0 : (L == 1 ? 5200.0 : 16000.0);
+  float H = layerProfile(L, azDeg);
+  float topTan = (H - ro.z) / D;
+  float pxTan = (1.0 + tanE * tanE) / uFocal;
+  float cover = clamp((topTan - tanE) / pxTan + 0.5, 0.0, 1.0);
+  if (cover <= 0.0) return vec4(0.0);
+
+  float dAz = 0.4;
+  float Hm = layerProfile(L, azDeg - dAz);
+  float Hp = layerProfile(L, azDeg + dAz);
+  float yw = ro.z + D * tanE;
+  float fl = float(L);
+  float dHdAz = (Hp - Hm) / (D * radians(2.0 * dAz));
+  vec2 rh = normalize(rd.xy);
+  vec2 th = vec2(rh.y, -rh.x);
+  float gul = vn(vec2(azDeg * D / (170.0 * 57.3), yw * 0.012 + fl * 7.0));
+  float gul2 = vn(vec2(azDeg * D / (40.0 * 57.3), yw * 0.05 + fl * 3.0));
+  float sr = (L == 0 ? 0.30 : (L == 1 ? 0.85 : 0.5)) * (0.45 + gul);
+  vec3 n = normalize(vec3(-(sr * rh + dHdAz * th), 1.0));
+
+  float st = sin(yw * (L == 1 ? 0.085 : 0.05) + vn(vec2(azDeg * 0.35, yw * 0.004)) * 8.0);
+  float bands = smoothstep(-0.25, 0.55, st);
+  vec3 cA = L == 0 ? srgb(vec3(0.55, 0.40, 0.30)) : (L == 1 ? srgb(vec3(0.43, 0.34, 0.28)) : srgb(vec3(0.56, 0.43, 0.33)));
+  vec3 cB = L == 0 ? srgb(vec3(0.66, 0.50, 0.38)) : (L == 1 ? srgb(vec3(0.70, 0.56, 0.44)) : srgb(vec3(0.66, 0.51, 0.40)));
+  vec3 alb = mix(cA, cB, bands) * mix(0.62, 1.08, gul) * (0.9 + 0.2 * gul2);
+  float ndl = max(dot(n, uSun), 0.0);
+  vec3 lit = alb * (SUNC * ndl + mix(AMB_DN, AMB_UP, 0.5 + 0.5 * n.z) * 1.2);
+  float fog = fogAmt(D) * (L == 2 ? 0.9 : 1.0);
+  lit = mix(lit, hazeCol(rd), fog);
+  return vec4(lit, cover);
+}
+
+vec3 background(vec3 ro, vec3 rd) {
+  vec3 col = skyColor(rd, true);
+  float mu = dot(rd, uSun);
+  col += vec3(9.0, 8.4, 7.8) * smoothstep(0.999990, 0.9999965, mu);
+  float azDeg = mod(degrees(atan(rd.x, rd.y)) + 360.0, 360.0);
+  float tanE = rd.z / max(length(rd.xy), 1e-4);
+  for (int L = 2; L >= 0; L--) {
+    vec4 ls = layerShade(L, ro, rd, azDeg, tanE);
+    col = mix(col, ls.rgb, ls.a);
+  }
+  return col;
+}
+
+/* ---- ground shading ---- */
+vec3 groundColor(vec2 p, Surf s, vec3 n, float px) {
+  vec2 pw = p + (vec2(vn(p * 0.025), vn(p * 0.025 + 31.7)) - 0.5) * 24.0;
+  vec4 m = texture(uMat, clamp((pw - uGrid.xy) / uWorld, 0.002, 0.998));
+  float sand = m.r;
+  float ridge = m.b;
+  float haz = m.a;
+  float n1 = vn(p / 41.0 + 3.0);
+  float n2 = vn(p / 6.5 + 9.0);
+  float n3 = vn(p / 1.3 + 1.0);
+  vec3 regolith = srgb(vec3(0.50, 0.33, 0.23));
+  vec3 sandC = srgb(vec3(0.82, 0.62, 0.43));
+  vec3 darkC = srgb(vec3(0.31, 0.24, 0.21));
+  vec3 outcrop = srgb(vec3(0.45, 0.36, 0.31));
+  vec3 c = mix(regolith, sandC, clamp(sand * 1.1 + (n1 - 0.5) * 0.45, 0.0, 1.0));
+  c = mix(c, darkC, clamp((n2 - 0.52) * 1.6, 0.0, 0.55) * (1.0 - 0.6 * sand));
+  c = mix(c, outcrop, ridge * 0.55);
+  c = mix(c, srgb(vec3(0.40, 0.19, 0.14)), haz * 0.35);
+  c *= 0.86 + 0.28 * n3;
+  c *= 1.0 + (vn(p / 0.07) - 0.5) * 0.45 * (1.0 - smoothstep(0.004, 0.05, px))
+           + (vn(p / 0.25) - 0.5) * 0.30 * (1.0 - smoothstep(0.01, 0.12, px));
+  c = mix(c, outcrop * 0.8, (1.0 - smoothstep(0.72, 0.93, n.z)) * 0.6);
+
+  float rm = smoothstep(0.0, 0.012 + px * 0.6, s.rockH);
+  vec3 rockC = mix(srgb(vec3(0.19, 0.15, 0.14)), srgb(vec3(0.44, 0.35, 0.29)), s.tone);
+  rockC *= 0.80 + 0.40 * vn(p * 5.0 + 2.0);
+  rockC = mix(rockC, sandC * 0.9, smoothstep(0.80, 1.0, n.z) * 0.38);
+  return mix(c, rockC, rm);
+}
+
+vec3 calcNormal(vec3 p, float t, float h0) {
+  float px = t / uFocal;
+  float e = max(0.012, px * 0.9);
+  float hx = heightAt(p.xy + vec2(e, 0.0), t, 0.3).h;
+  float hy = heightAt(p.xy + vec2(0.0, e), t, 0.3).h;
+  return normalize(vec3(-(hx - h0) / e, -(hy - h0) / e, 1.0));
+}
+
+float marchTerrain(vec3 ro, vec3 rd) {
+  float tEnd = MAX_T;
+  if (rd.z > 1e-4) tEnd = min(tEnd, (uMaxH - ro.z) / rd.z);
+  float t = 0.5;
+  float tPrev = 0.5;
+  float dz = 1.0;
+  bool hit = false;
+  bool done = false;
+  for (int i = 0; i < 300; i++) {
+    vec3 p = ro + rd * t;
+    dz = p.z - heightAt(p.xy, t, 1.0).h;
+    if (dz < 0.0) { hit = true; break; }
+    tPrev = t;
+    float px = t / uFocal;
+    t += clamp(dz * 0.5, max(0.015, px * 0.6), 2.0 + t * 0.08);
+    if (t > tEnd) { done = true; break; }
+  }
+  if (!hit) {
+    if (!done && dz < (t / uFocal) * 6.0 + 0.4) hit = true;
+    else return -1.0;
+  }
+  float lo = tPrev;
+  float hi = t;
+  for (int j = 0; j < 7; j++) {
+    float mdl = 0.5 * (lo + hi);
+    vec3 q = ro + rd * mdl;
+    if (q.z > heightAt(q.xy, mdl, 1.0).h) lo = mdl; else hi = mdl;
+  }
+  return hi;
+}
+
+vec3 shadeTerrain(vec3 ro, vec3 rd, float t) {
+  vec3 p = ro + rd * t;
+  float px = t / uFocal;
+  Surf s = heightAt(p.xy, t, 0.3);
+  vec3 n = calcNormal(p, t, s.h);
+  vec3 alb = groundColor(p.xy, s, n, px);
+  float ndl = max(dot(n, uSun), 0.0);
+  float sh = 1.0;
+  if (ndl > 0.0 && t < 1800.0) sh = softShadow(vec3(p.xy, s.h), n, t);
+  vec3 amb = mix(AMB_DN, AMB_UP, 0.5 + 0.5 * n.z) * s.ao;
+  vec3 col = alb * (SUNC * ndl * sh * mix(1.0, s.ao, 0.5) + amb);
+  float fres = pow(1.0 - clamp(dot(n, -rd), 0.0, 1.0), 4.0);
+  col += hazeCol(rd) * alb * fres * 0.35;
+  return mix(col, hazeCol(rd), fogAmt(t));
+}
+
+vec3 aces(vec3 x) {
+  return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);
+}
+
+void main() {
+  vec2 frag = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
+  float rel = atan(frag.x - uRes.x * 0.5, uFocal);
+  float elv = uPitch + atan(uRes.y * 0.5 - frag.y, uFocal);
+  float az = uHeading + rel;
+  vec3 rd = vec3(sin(az) * cos(elv), cos(az) * cos(elv), sin(elv));
+  vec3 ro = uCam;
+
+  float t = marchTerrain(ro, rd);
+  vec3 col = t > 0.0 ? shadeTerrain(ro, rd, t) : background(ro, rd);
+
+  col = aces(col * 1.05);
+  col = pow(col, vec3(1.0 / 2.2));
+  col += (h1(gl_FragCoord.xy) - 0.5) / 255.0;
+  fragColor = vec4(col, 1.0);
+}
+`;
+
+  /* Catmull-Rom upsample of the elevation grid (x8) so the shader can use cheap
+     bilinear lookups without visible cell creases; plus a packed material texture. */
+  function buildPanoTerrainData() {
+    const key = S.b;
+    if (S.pano.tdata && S.pano.tdata.key === key) return S.pano.tdata;
+    const F = 8, W = S.W, H = S.H, tw = W * F, th = H * F;
+    const src = S.b.terrain.elevation_dm;
+    const at = (i, j) => (src[clamp(j, 0, H - 1) * W + clamp(i, 0, W - 1)] || 0) / 10;
+    const cr = (p0, p1, p2, p3, t) =>
+      0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t);
+    const heights = new Float32Array(tw * th);
+    let maxH = -1e9;
+    for (let b = 0; b < th; b++) {
+      const gy = (b + 0.5) / F - 0.5;
+      const j0 = Math.floor(gy), ty = gy - j0;
+      for (let a = 0; a < tw; a++) {
+        const gx = (a + 0.5) / F - 0.5;
+        const i0 = Math.floor(gx), tx = gx - i0;
+        const r0 = cr(at(i0 - 1, j0 - 1), at(i0, j0 - 1), at(i0 + 1, j0 - 1), at(i0 + 2, j0 - 1), tx);
+        const r1 = cr(at(i0 - 1, j0), at(i0, j0), at(i0 + 1, j0), at(i0 + 2, j0), tx);
+        const r2 = cr(at(i0 - 1, j0 + 1), at(i0, j0 + 1), at(i0 + 1, j0 + 1), at(i0 + 2, j0 + 1), tx);
+        const r3 = cr(at(i0 - 1, j0 + 2), at(i0, j0 + 2), at(i0 + 1, j0 + 2), at(i0 + 2, j0 + 2), tx);
+        const v = cr(r0, r1, r2, r3, ty);
+        heights[b * tw + a] = v;
+        if (v > maxH) maxH = v;
+      }
+    }
+    const t = S.b.terrain;
+    const mat = new Uint8Array(W * H * 4);
+    for (let k = 0; k < W * H; k++) {
+      mat[k * 4] = clamp(Math.round((t.sand_x100[k] || 0) * 2.55), 0, 255);
+      mat[k * 4 + 1] = clamp(Math.round(((t.thermal_inertia[k] || 330) - 150) / 400 * 255), 0, 255);
+      mat[k * 4 + 2] = t.ridge[k] ? 255 : 0;
+      mat[k * 4 + 3] = t.hazard[k] ? 255 : 0;
+    }
+    const boulders = [];
+    ((t.stats || {}).boulders || []).slice(0, 16).forEach((bo) => {
+      boulders.push(bo.x, bo.y, Math.max(1.2, Number(bo.radius_m) || 3), hash2(bo.x, bo.y) * 100);
+    });
+    S.pano.tdata = { key, F, tw, th, heights, mat, maxH, boulders };
+    return S.pano.tdata;
+  }
+
+  function panoTexHeightAt(td, x, y) {
+    const qx = (x - S.x0) * td.F / S.cell - 0.5, qy = (y - S.y0) * td.F / S.cell - 0.5;
+    const i0 = Math.floor(qx), j0 = Math.floor(qy);
+    const fx = qx - i0, fy = qy - j0;
+    const g = (i, j) => td.heights[clamp(j, 0, td.th - 1) * td.tw + clamp(i, 0, td.tw - 1)];
+    return (g(i0, j0) * (1 - fx) + g(i0 + 1, j0) * fx) * (1 - fy) + (g(i0, j0 + 1) * (1 - fx) + g(i0 + 1, j0 + 1) * fx) * fy;
+  }
+
+  function initPanoGL() {
+    const P = S.pano;
+    if (P.glFailed) return null;
+    try {
+      const cv = document.createElement('canvas');
+      cv.width = 8; cv.height = 8;
+      const gl = cv.getContext('webgl2', {
+        antialias: false, alpha: false, depth: false, stencil: false, powerPreference: 'high-performance'
+      });
+      if (!gl) throw new Error('WebGL2 unavailable');
+      const compile = (type, src) => {
+        const sh = gl.createShader(type);
+        gl.shaderSource(sh, src);
+        gl.compileShader(sh);
+        if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh) || 'shader compile failed');
+        return sh;
+      };
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, PANO_GL_VS));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, PANO_GL_FS));
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog) || 'program link failed');
+      const u = {};
+      ['uRes', 'uFocal', 'uHeading', 'uPitch', 'uCam', 'uSun', 'uGrid', 'uWorld', 'uTexSize', 'uZOff', 'uMaxH',
+        'uBoulder', 'uBoulderN', 'uHeight', 'uMat'].forEach((n) => { u[n] = gl.getUniformLocation(prog, n); });
+
+      const td = buildPanoTerrainData();
+      const mkTex = (unit) => {
+        const tex = gl.createTexture();
+        gl.activeTexture(gl.TEXTURE0 + unit);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        return tex;
+      };
+      mkTex(0);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.R32F, td.tw, td.th, 0, gl.RED, gl.FLOAT, td.heights);
+      mkTex(1);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA8, S.W, S.H, 0, gl.RGBA, gl.UNSIGNED_BYTE, td.mat);
+
+      const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+      const renderer = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : '';
+      const G = {
+        cv, gl, prog, u, renderer,
+        soft: /swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer)
+      };
+      cv.addEventListener('webglcontextlost', (e) => { e.preventDefault(); if (P.gl === G) P.gl = null; });
+      P.gl = G;
+      return G;
+    } catch (err) {
+      P.glFailed = true;
+      console.warn('[ARES-WALK] WebGL terrain panorama unavailable; using canvas fallback.', err && err.message ? err.message : err);
+      return null;
+    }
+  }
+
+  // Renders the scene for the given camera and returns the offscreen canvas, or null
+  // if the caller should use the canvas fallback.
+  function renderPanoGL(w, h, dpr, heading, pitch, focal, scene) {
+    const P = S.pano;
+    if (P.glFailed) return null;
+    const G = P.gl || initPanoGL();
+    if (!G) return null;
+    const gl = G.gl;
+    if (gl.isContextLost()) { P.gl = null; return null; }
+
+    let qs = Math.min(dpr, 1.5);
+    qs = Math.min(qs, Math.sqrt((G.soft ? 0.35e6 : 1.8e6) / Math.max(1, w * h)));
+    if (performance.now() < (P.lqUntil || 0)) qs *= 0.6;
+    qs = Math.max(0.3, qs);
+    const bw = Math.max(8, Math.round(w * qs)), bh = Math.max(8, Math.round(h * qs));
+    if (G.cv.width !== bw || G.cv.height !== bh) { G.cv.width = bw; G.cv.height = bh; }
+    gl.viewport(0, 0, bw, bh);
+    gl.useProgram(G.prog);
+
+    const td = buildPanoTerrainData();
+    const cam = scene.cam;
+    const zOff = (cam.z - PANO.eyeHeightM) - panoTexHeightAt(td, cam.x, cam.y);
+    const sa = PANO.sunAzDeg * DEG, se = PANO.sunElDeg * DEG;
+    const U = G.u;
+    gl.uniform2f(U.uRes, bw, bh);
+    gl.uniform1f(U.uFocal, focal * bw / w);
+    gl.uniform1f(U.uHeading, heading * DEG);
+    gl.uniform1f(U.uPitch, pitch * DEG);
+    gl.uniform3f(U.uCam, cam.x, cam.y, cam.z);
+    gl.uniform3f(U.uSun, Math.sin(sa) * Math.cos(se), Math.cos(sa) * Math.cos(se), Math.sin(se));
+    gl.uniform4f(U.uGrid, S.x0, S.y0, S.cell, td.F);
+    gl.uniform2f(U.uWorld, S.W * S.cell, S.H * S.cell);
+    gl.uniform2i(U.uTexSize, td.tw, td.th);
+    gl.uniform1f(U.uZOff, zOff);
+    gl.uniform1f(U.uMaxH, td.maxH + zOff + 100);
+    const bo = new Float32Array(64);
+    bo.set(td.boulders.slice(0, 64));
+    gl.uniform4fv(U.uBoulder, bo);
+    gl.uniform1i(U.uBoulderN, Math.min(16, td.boulders.length / 4));
+    gl.uniform1i(U.uHeight, 0);
+    gl.uniform1i(U.uMat, 1);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    return G.cv;
+  }
+
+  // Line-of-sight against the terrain grid, used to hide route/markers behind ridges.
+  function panoLOS(cam, x, y, z, margin) {
+    const dx = x - cam.x, dy = y - cam.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 8) return true;
+    const n = Math.min(120, Math.ceil(dist / 3));
+    for (let k = 1; k < n; k++) {
+      const f = k / n;
+      const hh = heightAtWorldBilinear(cam.x + dx * f, cam.y + dy * f);
+      if (hh == null) continue;
+      if (hh - margin > cam.z + (z - cam.z) * f) return false;
+    }
+    return true;
+  }
+
   function schedulePanoDraw() {
     if (S.pano.raf) return;
     S.pano.raf = requestAnimationFrame(() => {
@@ -2646,7 +3272,7 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
     sky.addColorStop(0.86, '#b6875c');
     sky.addColorStop(1, '#d6ab78');
     ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, w, clamp(horizonY, 0, h));
+    ctx.fillRect(0, 0, w, h);
 
     // Sun: warm dust halo with a cool, bright core (Mars aureole).
     const sunRel = normalizeDeg(PANO.sunAzDeg - heading);
@@ -2672,32 +3298,72 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
       }
     }
 
-    // Ground: seven perspective bands sampled from the equirect terrain twin.
+    // Ground: per-pixel perspective render at half resolution. Colors blend smoothly
+    // between the terrain-twin distance bands, then world-anchored texture adds
+    // gravel, ripples and broad patches that fade out before they can shimmer.
     const stepX = w > 1200 ? 2 : 1;
     const pitchRad = pitch * DEG;
+    const GS = w > 1000 ? 3 : 2;
+    const gw = Math.max(1, Math.ceil(w / GS)), gh = Math.max(1, Math.ceil(h / GS));
+    let gcv = S.pano.groundCv;
+    if (!gcv) gcv = S.pano.groundCv = document.createElement('canvas');
+    if (gcv.width !== gw || gcv.height !== gh) { gcv.width = gw; gcv.height = gh; S.pano.groundImg = null; }
+    const gctx = gcv.getContext('2d');
+    let gimg = S.pano.groundImg;
+    if (!gimg) gimg = S.pano.groundImg = gctx.createImageData(gw, gh);
+    const gd = gimg.data;
+    gd.fill(0);
     const bandDists = scene.bandDist;
-    for (let x = 0; x < w; x += stepX) {
-      const rel = Math.atan2((x + stepX / 2) - w / 2, focal);
-      const idx = Math.floor(norm360(heading + rel * RAD2DEG) / 360 * scene.N) % scene.N;
+    const nB = bandDists.length;
+    const logB = bandDists.map(Math.log);
+    const camX = scene.cam.x, camY = scene.cam.y;
+    const octaves = [[33, 0.03, 0.34], [8, 0.12, 0.30], [1.7, 0.6, 0.26], [0.33, 3, 0.30]];
+    for (let gx = 0; gx < gw; gx++) {
+      const rel = Math.atan2((gx + 0.5) * GS - w / 2, focal);
+      const azDeg = norm360(heading + rel * RAD2DEG);
+      const idx = Math.floor(azDeg / 360 * scene.N) % scene.N;
+      const sinA = Math.sin(azDeg * DEG), cosA = Math.cos(azDeg * DEG);
       const yH = cy - focal * Math.tan(scene.horizon[idx] - pitchRad);
-      let yPrev = yH;
-      for (let k = 0; k < bandDists.length; k++) {
-        const d = bandDists[k];
-        const yNext = cy - focal * Math.tan(Math.atan2(-PANO.eyeHeightM, d) - pitchRad);
-        const y0 = Math.max(-2, yPrev);
-        const y1 = Math.min(h + 2, yNext);
-        if (y1 > y0) {
-          ctx.fillStyle = scene.bands[k][idx];
-          ctx.fillRect(x, y0, stepX + 0.7, y1 - y0 + 0.6);
+      for (let gy = Math.max(0, Math.floor(yH / GS)); gy < gh; gy++) {
+        const yc = (gy + 0.5) * GS;
+        const elev = pitchRad + Math.atan((cy - yc) / focal);
+        let c0, c1, t = 0, d = Infinity;
+        if (elev < -0.0009) d = PANO.eyeHeightM / Math.tan(-elev);
+        if (d >= bandDists[0]) {
+          c0 = c1 = scene.bands[0][idx];
+        } else if (d <= bandDists[nB - 1]) {
+          c0 = c1 = scene.bands[nB - 1][idx];
+        } else {
+          let k = 0;
+          while (k < nB - 2 && d <= bandDists[k + 1]) k++;
+          c0 = scene.bands[k][idx]; c1 = scene.bands[k + 1][idx];
+          t = (logB[k] - Math.log(d)) / (logB[k] - logB[k + 1]);
         }
-        yPrev = yNext;
-      }
-      const y0 = Math.max(-2, yPrev);
-      if (y0 < h + 2) {
-        ctx.fillStyle = scene.bands[scene.bands.length - 1][idx];
-        ctx.fillRect(x, y0, stepX + 0.7, h + 2 - y0);
+        let r = c0[0] + (c1[0] - c0[0]) * t;
+        let g = c0[1] + (c1[1] - c0[1]) * t;
+        let b = c0[2] + (c1[2] - c0[2]) * t;
+        if (d < bandDists[0]) {
+          const wx = camX + sinA * d, wy = camY + cosA * d;
+          const foot = d * GS / focal;
+          let n = 0;
+          for (let o = 0; o < octaves.length; o++) {
+            const fade = 1 - foot / (octaves[o][1] * 0.7);
+            if (fade > 0) n += (vnoise(wx * octaves[o][0], wy * octaves[o][0]) - 0.5) * octaves[o][2] * Math.min(1, fade);
+          }
+          const k2 = 1 + n * (1 - 0.55 * Math.min(1, d / bandDists[0]));
+          r *= k2; g *= k2; b *= k2;
+        } else {
+          // Distant rising terrain: aerial perspective strongest near the skyline.
+          const hz = 0.22 * (1 - clamp((yc - yH) / 110, 0, 1));
+          r += (214 - r) * hz; g += (171 - g) * hz; b += (120 - b) * hz;
+        }
+        const o4 = (gy * gw + gx) * 4;
+        gd[o4] = r; gd[o4 + 1] = g; gd[o4 + 2] = b; gd[o4 + 3] = 255;
       }
     }
+    gctx.putImageData(gimg, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(gcv, 0, 0, gw * GS, gh * GS);
 
     // Mountain faces: sunlit crests falling into shadowed bases.
     const skyPts = new Float32Array(Math.ceil(w / stepX) + 2);
@@ -2733,18 +3399,6 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
       ctx.restore();
     }
 
-    // Warm dust haze hugging the skyline and blending the far terrain edge into the sky
-    const hazeTop = Math.max(0, Math.min(h, horizonY - Math.max(14, h * 0.05)));
-    const hazeH = Math.max(0, Math.min(h - hazeTop, Math.max(38, h * 0.16)));
-    if (hazeH > 0) {
-      const hz = ctx.createLinearGradient(0, hazeTop, 0, hazeTop + hazeH);
-      hz.addColorStop(0, 'rgba(214, 171, 120, 0)');
-      hz.addColorStop(0.35, 'rgba(214, 171, 120, 0.38)');
-      hz.addColorStop(0.70, 'rgba(214, 171, 120, 0.22)');
-      hz.addColorStop(1, 'rgba(214, 171, 120, 0)');
-      ctx.fillStyle = hz;
-      ctx.fillRect(0, hazeTop, w, hazeH);
-    }
 
     // Foreground vignette grounds the eye in the near field.
     const fgTop = Math.max(0, horizonY);
@@ -2790,11 +3444,14 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
       if (Math.abs(rel) > hfov * 0.72) return;
       const sx = w / 2 + focal * Math.tan(rel * DEG);
       if (sx < -60 || sx > w + 60) return;
-      const baseAng = Math.atan2(obj.z - cam.z, dist);
-      const topAng = Math.atan2(obj.z + (obj.h || obj.radius * 1.1) - cam.z, dist);
+      // Rocks sit on the same flat-plane perspective used to draw the ground.
+      const baseAng = Math.atan2(-PANO.eyeHeightM, dist);
+      const topAng = Math.atan2(-PANO.eyeHeightM + (obj.h || obj.radius * 1.1), dist);
       const yBase = cy - focal * Math.tan(baseAng - pitchRad);
       const yTop = cy - focal * Math.tan(topAng - pitchRad);
       if (yTop > h || yBase < 0) return;
+      const sIdx = Math.floor(norm360(Math.atan2(dx, dy) * RAD2DEG) / 360 * scene.N) % scene.N;
+      if (yBase < cy - focal * Math.tan(scene.horizon[sIdx] - pitchRad)) return;
       const hw = focal * obj.radius / dist;
       const ry = Math.max(0.8, yBase - yTop);
       if (hw < 0.45 || ry < 0.7) return;
@@ -2875,12 +3532,12 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
     });
 
     // Atmospheric rim around the skyline
-    ctx.fillStyle = 'rgba(238, 208, 168, 0.16)';
+    ctx.fillStyle = 'rgba(238, 208, 168, 0.10)';
     for (let x = 0; x < w; x += stepX) {
       const rel = Math.atan2((x + stepX / 2) - w / 2, focal);
       const idx = Math.floor(norm360(heading + rel * RAD2DEG) / 360 * scene.N) % scene.N;
       const yH = cy - focal * Math.tan(scene.horizon[idx] - pitchRad);
-      if (yH > -6 && yH < h + 6) ctx.fillRect(x, yH - 3, stepX + 0.75, 6);
+      if (yH > -6 && yH < h + 6) ctx.fillRect(x, yH - 1.5, stepX + 0.75, 3);
     }
 
     // Project a world point into the panorama view.
@@ -4134,7 +4791,7 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
     }
 
     if (S.current === 0) {
-      setText('vStationEyebrow', 'AT PRESSURIZED ROVER BASE · READY FOR EVA');
+      setText('vStationEyebrow', 'EVA START · MSL SOL ' + (S.base.sol || st.sol));
       setText('vStationTitle', 'AT PRESSURIZED ROVER BASE · READY FOR EVA');
     } else if (atStation) {
       setText('vStationEyebrow', 'SURFACE NODE · MSL SOL ' + st.sol + ' · SITE ' + st.site + ' / DRIVE ' + st.drive);
