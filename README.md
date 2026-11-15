@@ -65,11 +65,13 @@ If you change the physics constants in `src/mars_eva_engine.py`, rebuild the bun
 ```text
 index.html                     browser app: Tactical GIS Console + Field Visor + embedded twin
 src/mars_eva_engine.py         terrain twin, physics, Dijkstra, reserve planner, plot
-src/pds_ingest.py              NASA waypoint/Mastcam ingest, optional rasters, bundle
+src/pds_ingest.py              NASA waypoint/Mastcam ingest, CRS raster reprojection, bundle
+src/build_mastcam_panos.py     Mastcam mosaic builder: PDS telemetry enrichment, stitching
 data/mission_bundle.json       committed mission bundle consumed by index.html
 data/raw/                      optional user-supplied pre-cropped GeoTIFF/TIFF/IMG
+assets/panos/                  stitched landmark panoramas (ALT-05, ALT-10) and manifest.json
 assets/mount_sharp_eva_plan.png verification sheet (terrain + metabolic profile)
-requirements.txt               numpy, scipy, matplotlib
+requirements.txt               numpy, scipy, matplotlib (rasterio optional)
 ```
 
 ## Architecture
@@ -270,7 +272,11 @@ Be precise about provenance. It is the difference between a simulation and a mis
 ## Browser app
 
 - **Tactical GIS Console:** mission summary, station cards with real Mastcam thumbnails, pan/zoom terrain map with docked controls, layer toggles, step scrubber, suit telemetry, PLSS/O2/water bars, reserve status, and provenance.
-- **Field Visor & Mastcam:** photographic street-view explorer with a horizon/azimuth reticle, previous/next stop navigation, Mastcam filmstrip, PiP mini-map, and PLSS/radiation overlays. At 1120 px or less it hides the console sidebars and fills the viewport.
+- **Field Visor & Mastcam:** photographic street-view explorer with a continuous 360° terrain-twin panorama, horizon/azimuth reticle, previous/next stop navigation, Mastcam filmstrip, PiP mini-map, and PLSS/radiation overlays.
+- **Interactive Stitched Mastcam Landmark Panoramas:** rock-rich stations (`ALT-05 Layered Spur` and `ALT-10 Upper Bench`) feature multi-frame stitched mosaics with a `MASTCAM STITCHED MOSAIC` badge. Includes pointer-captured drag-to-pan with momentum and inertia decay, mousewheel horizontal panning, double-click to reset view, and auto-centering on ultra-wide viewports. Other stations preserve the single-frame Mastcam viewer + Sol filmstrip, with automatic single-frame fallback if a mosaic fails to load.
+- **Layer Provenance Badges:** dynamic badge next to the Base Layer selector explicitly states `GENUINE PDS RASTER` (green) versus `CALIBRATED TWIN FALLBACK` (amber) with hover tooltips detailing exact PDS product IDs and SHA-256 file hashes.
+- **Visor Step-0 Polish:** at step 0, the top-left visor card displays `AT PRESSURIZED ROVER BASE · READY FOR EVA`, Previous Stop (`#streetPrev`) is disabled, and the 3D route ribbon is anchored directly beneath the astronaut's boots (~1.35 m, $z = \text{cam.z} - 1.65$).
+- **Atmospheric Horizon Blending:** smoothly blends the far terrain boundary into the Martian sky using matching butterscotch distance fog (`rgba(214, 171, 120, ...)`).
 - **Terrain fields:** elevation (hillshaded), slope, TPI, thermal inertia, D2300, and sand.
 - **Overlays:** hazard buffer, RF shadow, TPI ridges, planned route, stations, ridge repeaters, and the real Curiosity track.
 - **Elevation & PLSS chart:** terrain elevation, remaining PLSS energy, remaining energy after the current station's contingency walkback, and the protected 100 Wh floor. Click or drag to scrub.
@@ -279,11 +285,22 @@ Be precise about provenance. It is the difference between a simulation and a mis
 - **Custom waypoints:** click the map away from a station to add a sampling target. ARES-WALK estimates the round-trip side trip from the nearest point on the certified route. These are advisory estimates and are not inserted into the certified route.
 - **SPE controls:** **Simulate SPE Flare** aborts unvisited stations, solves the shelter path, reroutes the console and PiP, and reports acute dose versus time to shelter. **Stand Down SPE** restores the nominal EVA.
 
-## Optional local rasters
+## Mastcam stitched landmark panoramas
 
-`data/raw/` is intentionally git-ignored. Install `rasterio` separately. It is not part of `requirements.txt`.
+`src/build_mastcam_panos.py` builds high-resolution, wide equirectangular panoramas for rock-rich landmarks:
 
-Drop pre-cropped, north-up files with recognizable names:
+```powershell
+python src/build_mastcam_panos.py
+```
+
+- **Enrichment:** Raw API Mastcam items lack pointing data. The builder fetches PDS4 labels from `https://pds-imaging.jpl.nasa.gov` and extracts `AZIMUTH FINAL-RESOLVER` and `ELEVATION FINAL-RESOLVER` (`mast_el_deg ≈ resolver_deg - 90.0°`), `SITE`, `DRIVE`, and PDS product IDs.
+- **Filtering:** Downward rover-deck frames (`mast_el < -22°`) and tiny thumbnails are filtered out. The largest horizontal sequence matching on drive and elevation within ±3° is selected and sorted by azimuth.
+- **Processing:** Crops the bottom 24 px black JPL metadata bar, stitches frames using cylindrical/equirectangular projection with edge feathering, and outputs wide JPEGs to `assets/panos/`.
+- **Manifest:** Records SHA-256 hashes, PDS product IDs, frame azimuths/elevations, and crop boundaries in `assets/panos/manifest.json`.
+
+## Optional local rasters & PDS provenance
+
+`data/raw/` is intentionally git-ignored. When GeoTIFF or PDS rasters are supplied, `src/pds_ingest.py` ingests, reprojects, and samples them onto the Gale Crater ENU grid at 4.80°S, 137.38°E ($R = 3\,396\,190\text{ m}$):
 
 ```text
 *dtm*.tif, *dem*.tif, *elev*.tif   -> elevation (metres)
@@ -291,20 +308,32 @@ Drop pre-cropped, north-up files with recognizable names:
 *crism*.tif, *d2300*.tif           -> D2300 absorption
 ```
 
-The ingest resamples each layer to the 72 × 72 EVA grid, flips raster rows to the north-up analysis convention, and leaves unsupplied layers modeled.
-
-It does not attempt full planetary georeferencing. A mis-registered full-scene product would silently move the terrain under the route. Use a crop that already covers the mission box.
+When `data/raw/` is empty (default), the mission bundle honestly reports `data_sources.raster.status = "not_used"` and `terrain.mode = "calibrated_digital_twin"`. The browser console displays a `CALIBRATED TWIN FALLBACK` badge next to the Base Layer selector. When real rasters are provided and loaded, the badge dynamically switches to `GENUINE PDS RASTER` and surfaces exact PDS product IDs and SHA-256 file hashes.
 
 ## Verification and rebuild
 
 ```powershell
-python -m py_compile src\mars_eva_engine.py src\pds_ingest.py
+python -m py_compile src\mars_eva_engine.py src\pds_ingest.py src\build_mastcam_panos.py
 python src\pds_ingest.py
 ```
 
 `src/pds_ingest.py` validates terrain-array lengths, the route, station count, and reserve margin before writing `data/mission_bundle.json`. The verification sheet is written to `assets/mount_sharp_eva_plan.png`.
 
 The committed run was generated with Python 3.11.9 and the NASA endpoints live at build time. Re-running with `--offline` uses the curated image and waypoint fallbacks and is suitable for disconnected demos.
+
+### Browser UI automated testing
+
+`tests/ui-smoke.cjs` checks the console layout at 1440, 1280, 1024, and 390 px, NASA-inspired navy/white/blue styling, bundle loading, timeline controls, visor navigation, single-frame and stitched Mastcam display, SPE activation/stand-down, and the offline `file://` fallback. External requests are blocked so the checks do not depend on NASA API availability.
+
+```powershell
+npm install --no-save --package-lock=false playwright
+npx playwright install chromium
+node tests/ui-smoke.cjs
+# Optional screenshots, ignored by Git:
+node tests/ui-smoke.cjs --screenshots
+```
+
+The interface uses a navy mission header, white instrument panels, blue navigation and controls, and red emergency actions. On smaller screens the terrain map comes first, with telemetry and mission details grouped below. Scientific terrain ramps and the Mars imagery retain their own colors; green and amber remain reserved for operational status.
 
 ## Limitations
 

@@ -1,0 +1,434 @@
+{
+  "generator": "src/build_mastcam_panos.py",
+  "description": "Multi-frame Mastcam landmark stitched panoramas with honest PDS metadata.",
+  "landmarks": {
+    "ALT-05": {
+      "station_id": "ALT-05",
+      "station_name": "Layered Spur",
+      "sol": 4571,
+      "drive": "2214",
+      "pano_url": "assets/panos/alt05_layered_spur_sol4571.jpg",
+      "file_name": "alt05_layered_spur_sol4571.jpg",
+      "frame_count": 10,
+      "az_range": [
+        123.77,
+        192.76
+      ],
+      "el_range": [
+        -11.59,
+        -0.56
+      ],
+      "dimensions": [
+        4140,
+        662
+      ],
+      "sha256": "b8b12d5377488ca04d32c3ee6dca56de6c3b596357b408c3be4fe9c05c9dff91",
+      "frames": [
+        {
+          "imageid": "4571ML1077860091802052C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860091802052c00_dxxx",
+          "mast_az": 127.88,
+          "mast_el": -5.92,
+          "resolver_el": 84.08,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "c0b58c438dd15aab20030527e5fa59bff471d7b28189055e477e4a1626ddbebb"
+        },
+        {
+          "imageid": "4571ML1077860081802051C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860081802051c00_dxxx",
+          "mast_az": 134.68,
+          "mast_el": -6.06,
+          "resolver_el": 83.94,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "4af3e7aca7d44dd84dbd50c844019bedfbda6e4e4aad077e21f19a8f4d96ee26"
+        },
+        {
+          "imageid": "4571ML1077860071802050C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860071802050c00_dxxx",
+          "mast_az": 141.36,
+          "mast_el": -6.17,
+          "resolver_el": 83.83,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "cff06d3d15e5aa6d7d134e547e73632d3e730ad4aeeb8a0fffd24535942f84d2"
+        },
+        {
+          "imageid": "4571ML1077860061802049C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860061802049c00_dxxx",
+          "mast_az": 148.03,
+          "mast_el": -6.23,
+          "resolver_el": 83.77,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "a8f1ad74df120eb5bdcab967143120c6bad5464890eef5b2c255d1a27f7f3b7b"
+        },
+        {
+          "imageid": "4571ML1077860051802048C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860051802048c00_dxxx",
+          "mast_az": 154.85,
+          "mast_el": -6.23,
+          "resolver_el": 83.77,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "ca3de17e24ab86fcbf17d051f22b8e3af052e314563e620e1c5fc7f9c99f4c51"
+        },
+        {
+          "imageid": "4571ML1077860041802047C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860041802047c00_dxxx",
+          "mast_az": 161.64,
+          "mast_el": -6.23,
+          "resolver_el": 83.77,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "b801b0c778ee8414b3c86aa7d4fce7988a6496f5466cb16025c56796994d7562"
+        },
+        {
+          "imageid": "4571ML1077860031802046C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860031802046c00_dxxx",
+          "mast_az": 168.27,
+          "mast_el": -6.16,
+          "resolver_el": 83.84,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "f47019745c4a03b75bec76bfd74446174416d892f59cbe7b5830a331f232f87b"
+        },
+        {
+          "imageid": "4571ML1077860021802045C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860021802045c00_dxxx",
+          "mast_az": 175.08,
+          "mast_el": -6.13,
+          "resolver_el": 83.87,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "427f7f27d2ad5d7d7dbe9612bcfb690fb9d87230dc3ba7e9b2c9ce1815a7001b"
+        },
+        {
+          "imageid": "4571ML1077860011802044C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860011802044c00_dxxx",
+          "mast_az": 181.84,
+          "mast_el": -6.04,
+          "resolver_el": 83.96,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "e3c1a726acc00cb8c8a5ba5dcc7f83aa34ce042f14810b7c37e1f89dabc43adb"
+        },
+        {
+          "imageid": "4571ML1077860001802043C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860001802043c00_dxxx",
+          "mast_az": 188.65,
+          "mast_el": -5.99,
+          "resolver_el": 84.01,
+          "drive": "2214",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "e6fc44fa9c9067c5db4e5e4f569fa5a07ac69abfff6a22a495e1b30e158bb170"
+        }
+      ]
+    },
+    "ALT-10": {
+      "station_id": "ALT-10",
+      "station_name": "Upper Bench",
+      "sol": 4609,
+      "drive": "2730",
+      "pano_url": "assets/panos/alt10_upper_bench_sol4609.jpg",
+      "file_name": "alt10_upper_bench_sol4609.jpg",
+      "frame_count": 10,
+      "az_range": [
+        91.54,
+        160.77
+      ],
+      "el_range": [
+        -18.72,
+        0.14
+      ],
+      "dimensions": [
+        4154,
+        1132
+      ],
+      "sha256": "f3a690c62b2cfe8d70df1e41d9c70e6241ab11a7dc80a4e9b321850be3222926",
+      "frames": [
+        {
+          "imageid": "4609ML1079960001803492C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960001803492c00_dxxx",
+          "mast_az": 95.65,
+          "mast_el": -5.22,
+          "resolver_el": 84.78,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "76d9064957a7bb955da8ee63b271501c7ac84e0cf670c662510e97a11307a797"
+        },
+        {
+          "imageid": "4609ML1079960011803493C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960011803493c00_dxxx",
+          "mast_az": 102.1,
+          "mast_el": -6.79,
+          "resolver_el": 83.21,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "78804af3dc0ecda3728bd8e6e0026cfe12d5fe4614429b1ac28bb25185e03f4a"
+        },
+        {
+          "imageid": "4609ML1079960021803494C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960021803494c00_dxxx",
+          "mast_az": 108.98,
+          "mast_el": -8.09,
+          "resolver_el": 81.91,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "e05c22844d0061097c8364e78406733efa5bbb8e6834332376e014360383036b"
+        },
+        {
+          "imageid": "4609ML1079960031803495C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960031803495c00_dxxx",
+          "mast_az": 115.56,
+          "mast_el": -9.29,
+          "resolver_el": 80.71,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "b55453d7c5e5d43bd0643bbc9a80df07dcc752cd87b3e969333d86caeacb62f8"
+        },
+        {
+          "imageid": "4609ML1079960041803496C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960041803496c00_dxxx",
+          "mast_az": 122.29,
+          "mast_el": -10.35,
+          "resolver_el": 79.65,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "55e1488913d9d6616d582fdbdb1aeae2578b5fa59143e354d22449a00ea03a36"
+        },
+        {
+          "imageid": "4609ML1079960051803497C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960051803497c00_dxxx",
+          "mast_az": 129.15,
+          "mast_el": -11.28,
+          "resolver_el": 78.72,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "20235e6593e7862fa172f38f5bb6bc1c3f72992386a4151032837cdf99dcb316"
+        },
+        {
+          "imageid": "4609ML1079960061803498C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960061803498c00_dxxx",
+          "mast_az": 135.98,
+          "mast_el": -12.06,
+          "resolver_el": 77.94,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "b10551cc19582df37686e6294892da448e4d26f33e4c5d31332fd89d6d641ea0"
+        },
+        {
+          "imageid": "4609ML1079960071803499C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960071803499c00_dxxx",
+          "mast_az": 142.78,
+          "mast_el": -12.67,
+          "resolver_el": 77.33,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "bd18105c27a5e166deade418cfc926c54075011c9612c5d53e24e2452e0b7156"
+        },
+        {
+          "imageid": "4609ML1079960081803500C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960081803500c00_dxxx",
+          "mast_az": 149.74,
+          "mast_el": -13.1,
+          "resolver_el": 76.9,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "a88956e8b61a32b0b7ecdb8b1021d473e4df7a4b217847ac314c34b6ff3ea95f"
+        },
+        {
+          "imageid": "4609ML1079960091803501C00_DXXX",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960091803501c00_dxxx",
+          "mast_az": 156.66,
+          "mast_el": -13.36,
+          "resolver_el": 76.64,
+          "drive": "2730",
+          "dimensions": [
+            672,
+            896
+          ],
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sha256": "77881ec780993777574cd8cf4db9436fb41f364b4e0171e9e06971129891945d"
+        }
+      ]
+    }
+  }
+}

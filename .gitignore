@@ -7,6 +7,9 @@ venv/
 .pytest_cache/
 .mypy_cache/
 
+# Local browser-test screenshots
+tests/artifacts/
+
 # Raw planetary rasters stay local (HiRISE/THEMIS/CRISM products can be many GB)
 data/raw/*.tif
 data/raw/*.tiff
