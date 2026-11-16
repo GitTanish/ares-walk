@@ -1,434 +1,2678 @@
 {
+  "schema": "ares-walk/mastcam-mosaic-manifest@1.0",
   "generator": "src/build_mastcam_panos.py",
   "description": "Multi-frame Mastcam landmark stitched panoramas with honest PDS metadata.",
+  "generated_utc": "2026-11-16T08:24:09Z",
+  "source_api": "https://mars.nasa.gov/api/v1/raw_image_items",
+  "pds_volume": "volume_0040_raw",
+  "pds_label_base": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/{sol}/{imageid_lower}.xml",
+  "crop_bottom_px": 24,
+  "downward_mast_el_threshold_deg": -22.0,
+  "thumbnail_max_width": 480,
+  "el_cluster_tolerance_deg": 3.0,
+  "full_frame_fov_deg": [
+    34.0,
+    26.0
+  ],
+  "credit": "NASA/JPL-Caltech/MSSS, MSL Mastcam raw images",
   "landmarks": {
     "ALT-05": {
+      "id": "ALT-05_layered_spur_sol4571",
       "station_id": "ALT-05",
       "station_name": "Layered Spur",
       "sol": 4571,
       "drive": "2214",
-      "pano_url": "assets/panos/alt05_layered_spur_sol4571.jpg",
+      "site": 116,
+      "filename": "alt05_layered_spur_sol4571.jpg",
       "file_name": "alt05_layered_spur_sol4571.jpg",
+      "pano_url": "assets/panos/alt05_layered_spur_sol4571.jpg",
+      "file": "assets/panos/alt05_layered_spur_sol4571.jpg",
       "frame_count": 10,
       "az_range": [
-        123.77,
-        192.76
+        120.9485,
+        195.5846
       ],
       "el_range": [
-        -11.59,
-        -0.56
+        -15.1073,
+        3.7191
       ],
       "dimensions": [
-        4140,
-        662
+        4269,
+        1063
       ],
-      "sha256": "b8b12d5377488ca04d32c3ee6dca56de6c3b596357b408c3be4fe9c05c9dff91",
+      "width": 4269,
+      "height": 1063,
+      "sha256": "c7e866ee6332627d9a29f5ec5e49b02f544ceb7cacda0a824249804faa845c2e",
+      "az_min_deg": 120.9485,
+      "az_max_deg": 195.5846,
+      "el_min_deg": -15.1073,
+      "el_max_deg": 3.7191,
+      "az_span_deg": 74.636,
+      "el_span_deg": 18.5851,
+      "projection": "equirectangular azimuth/elevation",
+      "crop_bottom_px": 24,
+      "quality": 92,
       "frames": [
         {
           "imageid": "4571ML1077860091802052C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860091802052C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860091802052c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860091802052c00_dxxx",
-          "mast_az": 127.88,
-          "mast_el": -5.92,
-          "resolver_el": 84.08,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2052",
+          "pds_spacecraft_clock_start": "803291106.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "ae787af347a109a1f46d090fcbfd0f1537e16e23f26d31aeea41df84faf86551",
+          "sha256": "c0b58c438dd15aab20030527e5fa59bff471d7b28189055e477e4a1626ddbebb",
+          "sha256_jpeg": "c0b58c438dd15aab20030527e5fa59bff471d7b28189055e477e4a1626ddbebb",
+          "mast_az": 127.88057,
+          "mast_el": -5.920621,
+          "mast_az_deg": 127.88057,
+          "mast_el_deg": -5.920621,
+          "resolver_az_deg": 127.88057,
+          "resolver_el": 84.079379,
+          "resolver_el_deg": 84.079379,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "c0b58c438dd15aab20030527e5fa59bff471d7b28189055e477e4a1626ddbebb"
+          "sequence_id": "4571ML107786"
         },
         {
           "imageid": "4571ML1077860081802051C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860081802051C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860081802051c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860081802051c00_dxxx",
-          "mast_az": 134.68,
-          "mast_el": -6.06,
-          "resolver_el": 83.94,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2051",
+          "pds_spacecraft_clock_start": "803291096.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "b098ba38351eda68a79ba00fee699994670fccf8e2b586102d313d5c13386562",
+          "sha256": "4af3e7aca7d44dd84dbd50c844019bedfbda6e4e4aad077e21f19a8f4d96ee26",
+          "sha256_jpeg": "4af3e7aca7d44dd84dbd50c844019bedfbda6e4e4aad077e21f19a8f4d96ee26",
+          "mast_az": 134.681235,
+          "mast_el": -6.059735,
+          "mast_az_deg": 134.681235,
+          "mast_el_deg": -6.059735,
+          "resolver_az_deg": 134.681235,
+          "resolver_el": 83.940265,
+          "resolver_el_deg": 83.940265,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "4af3e7aca7d44dd84dbd50c844019bedfbda6e4e4aad077e21f19a8f4d96ee26"
+          "sequence_id": "4571ML107786"
         },
         {
           "imageid": "4571ML1077860071802050C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860071802050C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860071802050c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860071802050c00_dxxx",
-          "mast_az": 141.36,
-          "mast_el": -6.17,
-          "resolver_el": 83.83,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2050",
+          "pds_spacecraft_clock_start": "803291085.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "cbef73f945cdc829b4a7f5f5acfb3dce18ae0fcd278753c6355d7ea3ff7f78af",
+          "sha256": "cff06d3d15e5aa6d7d134e547e73632d3e730ad4aeeb8a0fffd24535942f84d2",
+          "sha256_jpeg": "cff06d3d15e5aa6d7d134e547e73632d3e730ad4aeeb8a0fffd24535942f84d2",
+          "mast_az": 141.363413,
+          "mast_el": -6.172951,
+          "mast_az_deg": 141.363413,
+          "mast_el_deg": -6.172951,
+          "resolver_az_deg": 141.363413,
+          "resolver_el": 83.827049,
+          "resolver_el_deg": 83.827049,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "cff06d3d15e5aa6d7d134e547e73632d3e730ad4aeeb8a0fffd24535942f84d2"
+          "sequence_id": "4571ML107786"
         },
         {
           "imageid": "4571ML1077860061802049C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860061802049C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860061802049c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860061802049c00_dxxx",
-          "mast_az": 148.03,
-          "mast_el": -6.23,
-          "resolver_el": 83.77,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2049",
+          "pds_spacecraft_clock_start": "803291074.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "e0a12c4d11f25ca453079f63ea8f4f12ca07c2b0bd1e7d5d1586ccfc3d2f232c",
+          "sha256": "a8f1ad74df120eb5bdcab967143120c6bad5464890eef5b2c255d1a27f7f3b7b",
+          "sha256_jpeg": "a8f1ad74df120eb5bdcab967143120c6bad5464890eef5b2c255d1a27f7f3b7b",
+          "mast_az": 148.02611,
+          "mast_el": -6.228872,
+          "mast_az_deg": 148.02611,
+          "mast_el_deg": -6.228872,
+          "resolver_az_deg": 148.02611,
+          "resolver_el": 83.771128,
+          "resolver_el_deg": 83.771128,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "a8f1ad74df120eb5bdcab967143120c6bad5464890eef5b2c255d1a27f7f3b7b"
+          "sequence_id": "4571ML107786"
         },
         {
           "imageid": "4571ML1077860051802048C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860051802048C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860051802048c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860051802048c00_dxxx",
-          "mast_az": 154.85,
-          "mast_el": -6.23,
-          "resolver_el": 83.77,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2048",
+          "pds_spacecraft_clock_start": "803291064.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "f5dbc0fbfdb172ae883367acfdd6d523de6bfd9bd5505c6bc5e249ee66ab666a",
+          "sha256": "ca3de17e24ab86fcbf17d051f22b8e3af052e314563e620e1c5fc7f9c99f4c51",
+          "sha256_jpeg": "ca3de17e24ab86fcbf17d051f22b8e3af052e314563e620e1c5fc7f9c99f4c51",
+          "mast_az": 154.854507,
+          "mast_el": -6.228872,
+          "mast_az_deg": 154.854507,
+          "mast_el_deg": -6.228872,
+          "resolver_az_deg": 154.854507,
+          "resolver_el": 83.771128,
+          "resolver_el_deg": 83.771128,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "ca3de17e24ab86fcbf17d051f22b8e3af052e314563e620e1c5fc7f9c99f4c51"
+          "sequence_id": "4571ML107786"
         },
         {
           "imageid": "4571ML1077860041802047C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860041802047C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860041802047c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860041802047c00_dxxx",
-          "mast_az": 161.64,
-          "mast_el": -6.23,
-          "resolver_el": 83.77,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2047",
+          "pds_spacecraft_clock_start": "803291047.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "4c7f0c3e515a5e6537e675f089291fe35cae38c3a03338cef4c79b04cd009da5",
+          "sha256": "b801b0c778ee8414b3c86aa7d4fce7988a6496f5466cb16025c56796994d7562",
+          "sha256_jpeg": "b801b0c778ee8414b3c86aa7d4fce7988a6496f5466cb16025c56796994d7562",
+          "mast_az": 161.636035,
+          "mast_el": -6.227497,
+          "mast_az_deg": 161.636035,
+          "mast_el_deg": -6.227497,
+          "resolver_az_deg": 161.636035,
+          "resolver_el": 83.772503,
+          "resolver_el_deg": 83.772503,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "b801b0c778ee8414b3c86aa7d4fce7988a6496f5466cb16025c56796994d7562"
+          "sequence_id": "4571ML107786"
         },
         {
           "imageid": "4571ML1077860031802046C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860031802046C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860031802046c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860031802046c00_dxxx",
-          "mast_az": 168.27,
-          "mast_el": -6.16,
-          "resolver_el": 83.84,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2046",
+          "pds_spacecraft_clock_start": "803291036.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "7c81cc1080e990e6b45dc7c8e6cb67dd50c594a05c2b34915ad25975d9929498",
+          "sha256": "f47019745c4a03b75bec76bfd74446174416d892f59cbe7b5830a331f232f87b",
+          "sha256_jpeg": "f47019745c4a03b75bec76bfd74446174416d892f59cbe7b5830a331f232f87b",
+          "mast_az": 168.274095,
+          "mast_el": -6.164758,
+          "mast_az_deg": 168.274095,
+          "mast_el_deg": -6.164758,
+          "resolver_az_deg": 168.274095,
+          "resolver_el": 83.835242,
+          "resolver_el_deg": 83.835242,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "f47019745c4a03b75bec76bfd74446174416d892f59cbe7b5830a331f232f87b"
+          "sequence_id": "4571ML107786"
         },
         {
           "imageid": "4571ML1077860021802045C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860021802045C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860021802045c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860021802045c00_dxxx",
-          "mast_az": 175.08,
-          "mast_el": -6.13,
-          "resolver_el": 83.87,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2045",
+          "pds_spacecraft_clock_start": "803291026.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "a6bf5d5c45da41d21eecfad8d62aecdc3ee33da2cdff706786e225fb84bfbe53",
+          "sha256": "427f7f27d2ad5d7d7dbe9612bcfb690fb9d87230dc3ba7e9b2c9ce1815a7001b",
+          "sha256_jpeg": "427f7f27d2ad5d7d7dbe9612bcfb690fb9d87230dc3ba7e9b2c9ce1815a7001b",
+          "mast_az": 175.08261,
+          "mast_el": -6.126542,
+          "mast_az_deg": 175.08261,
+          "mast_el_deg": -6.126542,
+          "resolver_az_deg": 175.08261,
+          "resolver_el": 83.873458,
+          "resolver_el_deg": 83.873458,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "427f7f27d2ad5d7d7dbe9612bcfb690fb9d87230dc3ba7e9b2c9ce1815a7001b"
+          "sequence_id": "4571ML107786"
         },
         {
           "imageid": "4571ML1077860011802044C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860011802044C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860011802044c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860011802044c00_dxxx",
-          "mast_az": 181.84,
-          "mast_el": -6.04,
-          "resolver_el": 83.96,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2044",
+          "pds_spacecraft_clock_start": "803291016.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "8f6be11e4e8a5d000c0205931f0b743c40e2522a87ec6dacd0daca1f5b21860c",
+          "sha256": "e3c1a726acc00cb8c8a5ba5dcc7f83aa34ce042f14810b7c37e1f89dabc43adb",
+          "sha256_jpeg": "e3c1a726acc00cb8c8a5ba5dcc7f83aa34ce042f14810b7c37e1f89dabc43adb",
+          "mast_az": 181.837897,
+          "mast_el": -6.042031,
+          "mast_az_deg": 181.837897,
+          "mast_el_deg": -6.042031,
+          "resolver_az_deg": 181.837897,
+          "resolver_el": 83.957969,
+          "resolver_el_deg": 83.957969,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "e3c1a726acc00cb8c8a5ba5dcc7f83aa34ce042f14810b7c37e1f89dabc43adb"
+          "sequence_id": "4571ML107786"
         },
         {
           "imageid": "4571ML1077860001802043C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860001802043C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860001802043c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860001802043c00_dxxx",
-          "mast_az": 188.65,
-          "mast_el": -5.99,
-          "resolver_el": 84.01,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2043",
+          "pds_spacecraft_clock_start": "803291003.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "a322bd41dc3269c4e060fa02281aad723915c88d1481b1aded81c99ed34b4eca",
+          "sha256": "e6fc44fa9c9067c5db4e5e4f569fa5a07ac69abfff6a22a495e1b30e158bb170",
+          "sha256_jpeg": "e6fc44fa9c9067c5db4e5e4f569fa5a07ac69abfff6a22a495e1b30e158bb170",
+          "mast_az": 188.652542,
+          "mast_el": -5.987542,
+          "mast_az_deg": 188.652542,
+          "mast_el_deg": -5.987542,
+          "resolver_az_deg": 188.652542,
+          "resolver_el": 84.012458,
+          "resolver_el_deg": 84.012458,
           "drive": "2214",
+          "site": 116,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "e6fc44fa9c9067c5db4e5e4f569fa5a07ac69abfff6a22a495e1b30e158bb170"
+          "sequence_id": "4571ML107786"
         }
-      ]
+      ],
+      "selection": {
+        "usable_frames": 10,
+        "dropped_frames": 16,
+        "dropped": [
+          {
+            "imageid": "4571ML1077870001802053C00_DXXX",
+            "reasons": [
+              "downward mast_el -47.76 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870011802054C00_DXXX",
+            "reasons": [
+              "downward mast_el -47.18 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870021802055C00_DXXX",
+            "reasons": [
+              "downward mast_el -46.61 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870031802056C00_DXXX",
+            "reasons": [
+              "downward mast_el -48.33 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870041802057C00_DXXX",
+            "reasons": [
+              "downward mast_el -48.91 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870051802058C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.71 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870061802059C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.14 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870071802060C00_DXXX",
+            "reasons": [
+              "downward mast_el -36.57 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870081802061C00_DXXX",
+            "reasons": [
+              "downward mast_el -38.27 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870091802062C00_DXXX",
+            "reasons": [
+              "downward mast_el -38.84 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870101802063C00_DXXX",
+            "reasons": [
+              "downward mast_el -57.21 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870111802064C00_DXXX",
+            "reasons": [
+              "downward mast_el -56.65 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870121802065C00_DXXX",
+            "reasons": [
+              "downward mast_el -56.08 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870131802066C00_DXXX",
+            "reasons": [
+              "downward mast_el -58.35 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870141802067C00_DXXX",
+            "reasons": [
+              "downward mast_el -58.92 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077880061802068C00_DXXX",
+            "reasons": [
+              "downward mast_el -44.11 deg < -22.0 deg"
+            ],
+            "errors": []
+          }
+        ],
+        "drive_candidates": [
+          {
+            "drive": 2214,
+            "frames": 10,
+            "az_span_deg": 60.772,
+            "el_center_deg": -6.116,
+            "drive_match": true
+          }
+        ],
+        "selected_drive": 2214,
+        "selected_frames": 10,
+        "selected_az_span_deg": 60.772,
+        "selected_el_center_deg": -6.116,
+        "el_cluster_tolerance_deg": 3.0
+      },
+      "api": {
+        "sol": 4571,
+        "api_items": 52,
+        "api_total": 52,
+        "pages": 1,
+        "cache_sources": [
+          "cache"
+        ]
+      },
+      "stitch": {
+        "projection": "equirectangular azimuth/elevation",
+        "width": 4269,
+        "height": 1063,
+        "az_min_deg": 120.9485,
+        "az_max_deg": 195.5846,
+        "el_min_deg": -15.1073,
+        "el_max_deg": 3.7191,
+        "az_span_deg": 74.636,
+        "el_span_deg": 18.5851,
+        "common_vertical_band": true,
+        "cropped_el_union_deg": [
+          -15.4155,
+          3.786
+        ],
+        "nearest_filled_pixels": 0,
+        "output_deg_per_px": 0.017484,
+        "source_deg_per_px": 0.020631,
+        "frame_contribution": {
+          "4571ML1077860091802052C00_DXXX": 0.1858,
+          "4571ML1077860081802051C00_DXXX": 0.1858,
+          "4571ML1077860071802050C00_DXXX": 0.1858,
+          "4571ML1077860061802049C00_DXXX": 0.1858,
+          "4571ML1077860051802048C00_DXXX": 0.1858,
+          "4571ML1077860041802047C00_DXXX": 0.1858,
+          "4571ML1077860031802046C00_DXXX": 0.1858,
+          "4571ML1077860021802045C00_DXXX": 0.1858,
+          "4571ML1077860011802044C00_DXXX": 0.1858,
+          "4571ML1077860001802043C00_DXXX": 0.1858
+        },
+        "feather": "Hann-like az/el weight with 0.04 floor, normalised across overlapping frames"
+      },
+      "credit": "NASA/JPL-Caltech/MSSS, MSL Mastcam raw images"
     },
     "ALT-10": {
+      "id": "ALT-10_upper_bench_sol4609",
       "station_id": "ALT-10",
       "station_name": "Upper Bench",
       "sol": 4609,
       "drive": "2730",
-      "pano_url": "assets/panos/alt10_upper_bench_sol4609.jpg",
+      "site": 117,
+      "filename": "alt10_upper_bench_sol4609.jpg",
       "file_name": "alt10_upper_bench_sol4609.jpg",
+      "pano_url": "assets/panos/alt10_upper_bench_sol4609.jpg",
+      "file": "assets/panos/alt10_upper_bench_sol4609.jpg",
       "frame_count": 10,
       "az_range": [
-        91.54,
-        160.77
+        88.7214,
+        163.5903
       ],
       "el_range": [
-        -18.72,
-        0.14
+        -14.411,
+        -3.6545
       ],
       "dimensions": [
-        4154,
-        1132
+        4282,
+        615
       ],
-      "sha256": "f3a690c62b2cfe8d70df1e41d9c70e6241ab11a7dc80a4e9b321850be3222926",
+      "width": 4282,
+      "height": 615,
+      "sha256": "ed976dcc45753481f60761f643b6cf78cb6fe597e2ad0b3f848ffb5a8939e6c9",
+      "az_min_deg": 88.7214,
+      "az_max_deg": 163.5903,
+      "el_min_deg": -14.411,
+      "el_max_deg": -3.6545,
+      "az_span_deg": 74.869,
+      "el_span_deg": 10.7565,
+      "projection": "equirectangular azimuth/elevation",
+      "crop_bottom_px": 24,
+      "quality": 92,
       "frames": [
         {
           "imageid": "4609ML1079960001803492C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960001803492C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960001803492c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960001803492c00_dxxx",
-          "mast_az": 95.65,
-          "mast_el": -5.22,
-          "resolver_el": 84.78,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3492",
+          "pds_spacecraft_clock_start": "806660786.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "eb05eba9782147c384a7a35b627dafb079e4b7be57d884e34a8f99d0542c63f9",
+          "sha256": "76d9064957a7bb955da8ee63b271501c7ac84e0cf670c662510e97a11307a797",
+          "sha256_jpeg": "76d9064957a7bb955da8ee63b271501c7ac84e0cf670c662510e97a11307a797",
+          "mast_az": 95.653413,
+          "mast_el": -5.224362,
+          "mast_az_deg": 95.653413,
+          "mast_el_deg": -5.224362,
+          "resolver_az_deg": 95.653413,
+          "resolver_el": 84.775638,
+          "resolver_el_deg": 84.775638,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "76d9064957a7bb955da8ee63b271501c7ac84e0cf670c662510e97a11307a797"
+          "sequence_id": "4609ML107996"
         },
         {
           "imageid": "4609ML1079960011803493C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960011803493C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960011803493c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960011803493c00_dxxx",
-          "mast_az": 102.1,
-          "mast_el": -6.79,
-          "resolver_el": 83.21,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3493",
+          "pds_spacecraft_clock_start": "806660798.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "ab81064fc5b6c54b941d6504ac3a71a99d8e546e76e692c3785a3af3beeba747",
+          "sha256": "78804af3dc0ecda3728bd8e6e0026cfe12d5fe4614429b1ac28bb25185e03f4a",
+          "sha256_jpeg": "78804af3dc0ecda3728bd8e6e0026cfe12d5fe4614429b1ac28bb25185e03f4a",
+          "mast_az": 102.101022,
+          "mast_el": -6.785501,
+          "mast_az_deg": 102.101022,
+          "mast_el_deg": -6.785501,
+          "resolver_az_deg": 102.101022,
+          "resolver_el": 83.214499,
+          "resolver_el_deg": 83.214499,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "78804af3dc0ecda3728bd8e6e0026cfe12d5fe4614429b1ac28bb25185e03f4a"
+          "sequence_id": "4609ML107996"
         },
         {
           "imageid": "4609ML1079960021803494C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960021803494C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960021803494c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960021803494c00_dxxx",
-          "mast_az": 108.98,
-          "mast_el": -8.09,
-          "resolver_el": 81.91,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3494",
+          "pds_spacecraft_clock_start": "806660808.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "7498acb2f941abd7f24354eea7c5c1b90172369561e4dc5e418d5e296f23370d",
+          "sha256": "e05c22844d0061097c8364e78406733efa5bbb8e6834332376e014360383036b",
+          "sha256_jpeg": "e05c22844d0061097c8364e78406733efa5bbb8e6834332376e014360383036b",
+          "mast_az": 108.975942,
+          "mast_el": -8.087662,
+          "mast_az_deg": 108.975942,
+          "mast_el_deg": -8.087662,
+          "resolver_az_deg": 108.975942,
+          "resolver_el": 81.912338,
+          "resolver_el_deg": 81.912338,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "e05c22844d0061097c8364e78406733efa5bbb8e6834332376e014360383036b"
+          "sequence_id": "4609ML107996"
         },
         {
           "imageid": "4609ML1079960031803495C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960031803495C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960031803495c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960031803495c00_dxxx",
-          "mast_az": 115.56,
-          "mast_el": -9.29,
-          "resolver_el": 80.71,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3495",
+          "pds_spacecraft_clock_start": "806660817.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "7e498e9ab451237ad2573b9f629862be14cc92715922c508e4243bffd68b8340",
+          "sha256": "b55453d7c5e5d43bd0643bbc9a80df07dcc752cd87b3e969333d86caeacb62f8",
+          "sha256_jpeg": "b55453d7c5e5d43bd0643bbc9a80df07dcc752cd87b3e969333d86caeacb62f8",
+          "mast_az": 115.564441,
+          "mast_el": -9.285602,
+          "mast_az_deg": 115.564441,
+          "mast_el_deg": -9.285602,
+          "resolver_az_deg": 115.564441,
+          "resolver_el": 80.714398,
+          "resolver_el_deg": 80.714398,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "b55453d7c5e5d43bd0643bbc9a80df07dcc752cd87b3e969333d86caeacb62f8"
+          "sequence_id": "4609ML107996"
         },
         {
           "imageid": "4609ML1079960041803496C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960041803496C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960041803496c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960041803496c00_dxxx",
-          "mast_az": 122.29,
-          "mast_el": -10.35,
-          "resolver_el": 79.65,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3496",
+          "pds_spacecraft_clock_start": "806660828.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "00baaa373ff605e5b47a75fff1ebed84f5c4951e02e83f38f0536a3e40611f8e",
+          "sha256": "55e1488913d9d6616d582fdbdb1aeae2578b5fa59143e354d22449a00ea03a36",
+          "sha256_jpeg": "55e1488913d9d6616d582fdbdb1aeae2578b5fa59143e354d22449a00ea03a36",
+          "mast_az": 122.28707,
+          "mast_el": -10.353251,
+          "mast_az_deg": 122.28707,
+          "mast_el_deg": -10.353251,
+          "resolver_az_deg": 122.28707,
+          "resolver_el": 79.646749,
+          "resolver_el_deg": 79.646749,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "55e1488913d9d6616d582fdbdb1aeae2578b5fa59143e354d22449a00ea03a36"
+          "sequence_id": "4609ML107996"
         },
         {
           "imageid": "4609ML1079960051803497C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960051803497C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960051803497c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960051803497c00_dxxx",
-          "mast_az": 129.15,
-          "mast_el": -11.28,
-          "resolver_el": 78.72,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3497",
+          "pds_spacecraft_clock_start": "806660844.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "89b7007db3380324089f3289f0262362b15544b327ad8d1146ee252bfd291509",
+          "sha256": "20235e6593e7862fa172f38f5bb6bc1c3f72992386a4151032837cdf99dcb316",
+          "sha256_jpeg": "20235e6593e7862fa172f38f5bb6bc1c3f72992386a4151032837cdf99dcb316",
+          "mast_az": 129.151906,
+          "mast_el": -11.277891,
+          "mast_az_deg": 129.151906,
+          "mast_el_deg": -11.277891,
+          "resolver_az_deg": 129.151906,
+          "resolver_el": 78.722109,
+          "resolver_el_deg": 78.722109,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "20235e6593e7862fa172f38f5bb6bc1c3f72992386a4151032837cdf99dcb316"
+          "sequence_id": "4609ML107996"
         },
         {
           "imageid": "4609ML1079960061803498C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960061803498C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960061803498c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960061803498c00_dxxx",
-          "mast_az": 135.98,
-          "mast_el": -12.06,
-          "resolver_el": 77.94,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3498",
+          "pds_spacecraft_clock_start": "806660855.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "3d5c8f91dfe68cbeab65856aa2714f229ae4ef4de6248886095731d54c5a3fd5",
+          "sha256": "b10551cc19582df37686e6294892da448e4d26f33e4c5d31332fd89d6d641ea0",
+          "sha256_jpeg": "b10551cc19582df37686e6294892da448e4d26f33e4c5d31332fd89d6d641ea0",
+          "mast_az": 135.980933,
+          "mast_el": -12.060322,
+          "mast_az_deg": 135.980933,
+          "mast_el_deg": -12.060322,
+          "resolver_az_deg": 135.980933,
+          "resolver_el": 77.939678,
+          "resolver_el_deg": 77.939678,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "b10551cc19582df37686e6294892da448e4d26f33e4c5d31332fd89d6d641ea0"
+          "sequence_id": "4609ML107996"
         },
         {
           "imageid": "4609ML1079960071803499C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960071803499C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960071803499c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960071803499c00_dxxx",
-          "mast_az": 142.78,
-          "mast_el": -12.67,
-          "resolver_el": 77.33,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3499",
+          "pds_spacecraft_clock_start": "806660866.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "574be6114e3b02d2b32733ab90e3abc6c543859228c1600e2731218b3df5e0ba",
+          "sha256": "bd18105c27a5e166deade418cfc926c54075011c9612c5d53e24e2452e0b7156",
+          "sha256_jpeg": "bd18105c27a5e166deade418cfc926c54075011c9612c5d53e24e2452e0b7156",
+          "mast_az": 142.783661,
+          "mast_el": -12.671783,
+          "mast_az_deg": 142.783661,
+          "mast_el_deg": -12.671783,
+          "resolver_az_deg": 142.783661,
+          "resolver_el": 77.328217,
+          "resolver_el_deg": 77.328217,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "bd18105c27a5e166deade418cfc926c54075011c9612c5d53e24e2452e0b7156"
+          "sequence_id": "4609ML107996"
         },
         {
           "imageid": "4609ML1079960081803500C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960081803500C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960081803500c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960081803500c00_dxxx",
-          "mast_az": 149.74,
-          "mast_el": -13.1,
-          "resolver_el": 76.9,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3500",
+          "pds_spacecraft_clock_start": "806660876.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "198ac98d38aa870499e47c0cfd5ba57c0221a460739fea5fed8c03c529e6ac02",
+          "sha256": "a88956e8b61a32b0b7ecdb8b1021d473e4df7a4b217847ac314c34b6ff3ea95f",
+          "sha256_jpeg": "a88956e8b61a32b0b7ecdb8b1021d473e4df7a4b217847ac314c34b6ff3ea95f",
+          "mast_az": 149.743093,
+          "mast_el": -13.102991,
+          "mast_az_deg": 149.743093,
+          "mast_el_deg": -13.102991,
+          "resolver_az_deg": 149.743093,
+          "resolver_el": 76.897009,
+          "resolver_el_deg": 76.897009,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "a88956e8b61a32b0b7ecdb8b1021d473e4df7a4b217847ac314c34b6ff3ea95f"
+          "sequence_id": "4609ML107996"
         },
         {
           "imageid": "4609ML1079960091803501C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960091803501C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960091803501c00_dxxx.xml",
           "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960091803501c00_dxxx",
-          "mast_az": 156.66,
-          "mast_el": -13.36,
-          "resolver_el": 76.64,
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3501",
+          "pds_spacecraft_clock_start": "806660886.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "29180aee657662fbf688183f6073560e7bdbd47b017a96355ef8604afe2d5e4e",
+          "sha256": "77881ec780993777574cd8cf4db9436fb41f364b4e0171e9e06971129891945d",
+          "sha256_jpeg": "77881ec780993777574cd8cf4db9436fb41f364b4e0171e9e06971129891945d",
+          "mast_az": 156.658292,
+          "mast_el": -13.361165,
+          "mast_az_deg": 156.658292,
+          "mast_el_deg": -13.361165,
+          "resolver_az_deg": 156.658292,
+          "resolver_el": 76.638835,
+          "resolver_el_deg": 76.638835,
           "drive": "2730",
+          "site": 117,
           "dimensions": [
             672,
             896
           ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
           "crop_bounds": {
             "left": 0,
             "top": 0,
             "right": 672,
             "bottom": 872
           },
-          "sha256": "77881ec780993777574cd8cf4db9436fb41f364b4e0171e9e06971129891945d"
+          "sequence_id": "4609ML107996"
         }
-      ]
+      ],
+      "selection": {
+        "usable_frames": 25,
+        "dropped_frames": 40,
+        "dropped": [
+          {
+            "imageid": "4609ML1079940011803468C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.91 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940021803469C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.91 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940031803470C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.91 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940041803471C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.92 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940051803472C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.93 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940061803473C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.93 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940071803474C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.23 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940081803475C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.22 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940091803476C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.22 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940101803477C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.21 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940111803478C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.21 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940121803479C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.20 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940131803480C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.47 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940141803481C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.48 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940151803482C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.49 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940161803483C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.49 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940171803484C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.50 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940181803485C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.51 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940191803486C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.79 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940201803487C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.79 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940211803488C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.78 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940221803489C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.78 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940231803490C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.77 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940241803491C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.77 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970001803502C00_DXXX",
+            "reasons": [
+              "downward mast_el -47.93 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970011803503C00_DXXX",
+            "reasons": [
+              "downward mast_el -47.36 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970021803504C00_DXXX",
+            "reasons": [
+              "downward mast_el -46.79 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970031803505C00_DXXX",
+            "reasons": [
+              "downward mast_el -48.51 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970041803506C00_DXXX",
+            "reasons": [
+              "downward mast_el -49.08 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970051803507C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.89 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970061803508C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.32 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970071803509C00_DXXX",
+            "reasons": [
+              "downward mast_el -36.76 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970081803510C00_DXXX",
+            "reasons": [
+              "downward mast_el -38.46 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970091803511C00_DXXX",
+            "reasons": [
+              "downward mast_el -39.03 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970101803512C00_DXXX",
+            "reasons": [
+              "downward mast_el -57.39 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970111803513C00_DXXX",
+            "reasons": [
+              "downward mast_el -56.83 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970121803514C00_DXXX",
+            "reasons": [
+              "downward mast_el -56.27 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970131803515C00_DXXX",
+            "reasons": [
+              "downward mast_el -58.53 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970141803516C00_DXXX",
+            "reasons": [
+              "downward mast_el -59.10 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079980061803517C00_DXXX",
+            "reasons": [
+              "downward mast_el -44.11 deg < -22.0 deg"
+            ],
+            "errors": []
+          }
+        ],
+        "drive_candidates": [
+          {
+            "drive": 2730,
+            "frames": 10,
+            "az_span_deg": 61.005,
+            "el_center_deg": -10.221,
+            "drive_match": true
+          },
+          {
+            "drive": 2538,
+            "frames": 6,
+            "az_span_deg": 22.748,
+            "el_center_deg": -5.007,
+            "drive_match": false
+          },
+          {
+            "drive": 2538,
+            "frames": 6,
+            "az_span_deg": 22.747,
+            "el_center_deg": -9.017,
+            "drive_match": false
+          }
+        ],
+        "selected_drive": 2730,
+        "selected_frames": 10,
+        "selected_az_span_deg": 61.005,
+        "selected_el_center_deg": -10.221,
+        "el_cluster_tolerance_deg": 3.0
+      },
+      "api": {
+        "sol": 4609,
+        "api_items": 130,
+        "api_total": 130,
+        "pages": 2,
+        "cache_sources": [
+          "network"
+        ]
+      },
+      "stitch": {
+        "projection": "equirectangular azimuth/elevation",
+        "width": 4282,
+        "height": 615,
+        "az_min_deg": 88.7214,
+        "az_max_deg": 163.5903,
+        "el_min_deg": -14.411,
+        "el_max_deg": -3.6545,
+        "az_span_deg": 74.869,
+        "el_span_deg": 10.7565,
+        "common_vertical_band": true,
+        "cropped_el_union_deg": [
+          -22.5478,
+          4.4823
+        ],
+        "nearest_filled_pixels": 0,
+        "output_deg_per_px": 0.017484,
+        "source_deg_per_px": 0.020631,
+        "frame_contribution": {
+          "4609ML1079960001803492C00_DXXX": 0.1852,
+          "4609ML1079960011803493C00_DXXX": 0.1852,
+          "4609ML1079960021803494C00_DXXX": 0.1852,
+          "4609ML1079960031803495C00_DXXX": 0.1852,
+          "4609ML1079960041803496C00_DXXX": 0.1852,
+          "4609ML1079960051803497C00_DXXX": 0.1852,
+          "4609ML1079960061803498C00_DXXX": 0.1852,
+          "4609ML1079960071803499C00_DXXX": 0.185,
+          "4609ML1079960081803500C00_DXXX": 0.185,
+          "4609ML1079960091803501C00_DXXX": 0.1852
+        },
+        "feather": "Hann-like az/el weight with 0.04 floor, normalised across overlapping frames"
+      },
+      "credit": "NASA/JPL-Caltech/MSSS, MSL Mastcam raw images"
     }
-  }
+  },
+  "panos": [
+    {
+      "id": "ALT-05_layered_spur_sol4571",
+      "station_id": "ALT-05",
+      "station_name": "Layered Spur",
+      "sol": 4571,
+      "drive": "2214",
+      "site": 116,
+      "filename": "alt05_layered_spur_sol4571.jpg",
+      "file_name": "alt05_layered_spur_sol4571.jpg",
+      "pano_url": "assets/panos/alt05_layered_spur_sol4571.jpg",
+      "file": "assets/panos/alt05_layered_spur_sol4571.jpg",
+      "frame_count": 10,
+      "az_range": [
+        120.9485,
+        195.5846
+      ],
+      "el_range": [
+        -15.1073,
+        3.7191
+      ],
+      "dimensions": [
+        4269,
+        1063
+      ],
+      "width": 4269,
+      "height": 1063,
+      "sha256": "c7e866ee6332627d9a29f5ec5e49b02f544ceb7cacda0a824249804faa845c2e",
+      "az_min_deg": 120.9485,
+      "az_max_deg": 195.5846,
+      "el_min_deg": -15.1073,
+      "el_max_deg": 3.7191,
+      "az_span_deg": 74.636,
+      "el_span_deg": 18.5851,
+      "projection": "equirectangular azimuth/elevation",
+      "crop_bottom_px": 24,
+      "quality": 92,
+      "frames": [
+        {
+          "imageid": "4571ML1077860091802052C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860091802052C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860091802052c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860091802052c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2052",
+          "pds_spacecraft_clock_start": "803291106.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "ae787af347a109a1f46d090fcbfd0f1537e16e23f26d31aeea41df84faf86551",
+          "sha256": "c0b58c438dd15aab20030527e5fa59bff471d7b28189055e477e4a1626ddbebb",
+          "sha256_jpeg": "c0b58c438dd15aab20030527e5fa59bff471d7b28189055e477e4a1626ddbebb",
+          "mast_az": 127.88057,
+          "mast_el": -5.920621,
+          "mast_az_deg": 127.88057,
+          "mast_el_deg": -5.920621,
+          "resolver_az_deg": 127.88057,
+          "resolver_el": 84.079379,
+          "resolver_el_deg": 84.079379,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        },
+        {
+          "imageid": "4571ML1077860081802051C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860081802051C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860081802051c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860081802051c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2051",
+          "pds_spacecraft_clock_start": "803291096.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "b098ba38351eda68a79ba00fee699994670fccf8e2b586102d313d5c13386562",
+          "sha256": "4af3e7aca7d44dd84dbd50c844019bedfbda6e4e4aad077e21f19a8f4d96ee26",
+          "sha256_jpeg": "4af3e7aca7d44dd84dbd50c844019bedfbda6e4e4aad077e21f19a8f4d96ee26",
+          "mast_az": 134.681235,
+          "mast_el": -6.059735,
+          "mast_az_deg": 134.681235,
+          "mast_el_deg": -6.059735,
+          "resolver_az_deg": 134.681235,
+          "resolver_el": 83.940265,
+          "resolver_el_deg": 83.940265,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        },
+        {
+          "imageid": "4571ML1077860071802050C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860071802050C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860071802050c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860071802050c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2050",
+          "pds_spacecraft_clock_start": "803291085.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "cbef73f945cdc829b4a7f5f5acfb3dce18ae0fcd278753c6355d7ea3ff7f78af",
+          "sha256": "cff06d3d15e5aa6d7d134e547e73632d3e730ad4aeeb8a0fffd24535942f84d2",
+          "sha256_jpeg": "cff06d3d15e5aa6d7d134e547e73632d3e730ad4aeeb8a0fffd24535942f84d2",
+          "mast_az": 141.363413,
+          "mast_el": -6.172951,
+          "mast_az_deg": 141.363413,
+          "mast_el_deg": -6.172951,
+          "resolver_az_deg": 141.363413,
+          "resolver_el": 83.827049,
+          "resolver_el_deg": 83.827049,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        },
+        {
+          "imageid": "4571ML1077860061802049C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860061802049C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860061802049c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860061802049c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2049",
+          "pds_spacecraft_clock_start": "803291074.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "e0a12c4d11f25ca453079f63ea8f4f12ca07c2b0bd1e7d5d1586ccfc3d2f232c",
+          "sha256": "a8f1ad74df120eb5bdcab967143120c6bad5464890eef5b2c255d1a27f7f3b7b",
+          "sha256_jpeg": "a8f1ad74df120eb5bdcab967143120c6bad5464890eef5b2c255d1a27f7f3b7b",
+          "mast_az": 148.02611,
+          "mast_el": -6.228872,
+          "mast_az_deg": 148.02611,
+          "mast_el_deg": -6.228872,
+          "resolver_az_deg": 148.02611,
+          "resolver_el": 83.771128,
+          "resolver_el_deg": 83.771128,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        },
+        {
+          "imageid": "4571ML1077860051802048C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860051802048C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860051802048c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860051802048c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2048",
+          "pds_spacecraft_clock_start": "803291064.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "f5dbc0fbfdb172ae883367acfdd6d523de6bfd9bd5505c6bc5e249ee66ab666a",
+          "sha256": "ca3de17e24ab86fcbf17d051f22b8e3af052e314563e620e1c5fc7f9c99f4c51",
+          "sha256_jpeg": "ca3de17e24ab86fcbf17d051f22b8e3af052e314563e620e1c5fc7f9c99f4c51",
+          "mast_az": 154.854507,
+          "mast_el": -6.228872,
+          "mast_az_deg": 154.854507,
+          "mast_el_deg": -6.228872,
+          "resolver_az_deg": 154.854507,
+          "resolver_el": 83.771128,
+          "resolver_el_deg": 83.771128,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        },
+        {
+          "imageid": "4571ML1077860041802047C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860041802047C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860041802047c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860041802047c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2047",
+          "pds_spacecraft_clock_start": "803291047.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "4c7f0c3e515a5e6537e675f089291fe35cae38c3a03338cef4c79b04cd009da5",
+          "sha256": "b801b0c778ee8414b3c86aa7d4fce7988a6496f5466cb16025c56796994d7562",
+          "sha256_jpeg": "b801b0c778ee8414b3c86aa7d4fce7988a6496f5466cb16025c56796994d7562",
+          "mast_az": 161.636035,
+          "mast_el": -6.227497,
+          "mast_az_deg": 161.636035,
+          "mast_el_deg": -6.227497,
+          "resolver_az_deg": 161.636035,
+          "resolver_el": 83.772503,
+          "resolver_el_deg": 83.772503,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        },
+        {
+          "imageid": "4571ML1077860031802046C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860031802046C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860031802046c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860031802046c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2046",
+          "pds_spacecraft_clock_start": "803291036.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "7c81cc1080e990e6b45dc7c8e6cb67dd50c594a05c2b34915ad25975d9929498",
+          "sha256": "f47019745c4a03b75bec76bfd74446174416d892f59cbe7b5830a331f232f87b",
+          "sha256_jpeg": "f47019745c4a03b75bec76bfd74446174416d892f59cbe7b5830a331f232f87b",
+          "mast_az": 168.274095,
+          "mast_el": -6.164758,
+          "mast_az_deg": 168.274095,
+          "mast_el_deg": -6.164758,
+          "resolver_az_deg": 168.274095,
+          "resolver_el": 83.835242,
+          "resolver_el_deg": 83.835242,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        },
+        {
+          "imageid": "4571ML1077860021802045C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860021802045C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860021802045c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860021802045c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2045",
+          "pds_spacecraft_clock_start": "803291026.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "a6bf5d5c45da41d21eecfad8d62aecdc3ee33da2cdff706786e225fb84bfbe53",
+          "sha256": "427f7f27d2ad5d7d7dbe9612bcfb690fb9d87230dc3ba7e9b2c9ce1815a7001b",
+          "sha256_jpeg": "427f7f27d2ad5d7d7dbe9612bcfb690fb9d87230dc3ba7e9b2c9ce1815a7001b",
+          "mast_az": 175.08261,
+          "mast_el": -6.126542,
+          "mast_az_deg": 175.08261,
+          "mast_el_deg": -6.126542,
+          "resolver_az_deg": 175.08261,
+          "resolver_el": 83.873458,
+          "resolver_el_deg": 83.873458,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        },
+        {
+          "imageid": "4571ML1077860011802044C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860011802044C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860011802044c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860011802044c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2044",
+          "pds_spacecraft_clock_start": "803291016.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "8f6be11e4e8a5d000c0205931f0b743c40e2522a87ec6dacd0daca1f5b21860c",
+          "sha256": "e3c1a726acc00cb8c8a5ba5dcc7f83aa34ce042f14810b7c37e1f89dabc43adb",
+          "sha256_jpeg": "e3c1a726acc00cb8c8a5ba5dcc7f83aa34ce042f14810b7c37e1f89dabc43adb",
+          "mast_az": 181.837897,
+          "mast_el": -6.042031,
+          "mast_az_deg": 181.837897,
+          "mast_el_deg": -6.042031,
+          "resolver_az_deg": 181.837897,
+          "resolver_el": 83.957969,
+          "resolver_el_deg": 83.957969,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        },
+        {
+          "imageid": "4571ML1077860001802043C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04571/mcam/4571ML1077860001802043C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4571/4571ml1077860001802043c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4571ml1077860001802043c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "2043",
+          "pds_spacecraft_clock_start": "803291003.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "a322bd41dc3269c4e060fa02281aad723915c88d1481b1aded81c99ed34b4eca",
+          "sha256": "e6fc44fa9c9067c5db4e5e4f569fa5a07ac69abfff6a22a495e1b30e158bb170",
+          "sha256_jpeg": "e6fc44fa9c9067c5db4e5e4f569fa5a07ac69abfff6a22a495e1b30e158bb170",
+          "mast_az": 188.652542,
+          "mast_el": -5.987542,
+          "mast_az_deg": 188.652542,
+          "mast_el_deg": -5.987542,
+          "resolver_az_deg": 188.652542,
+          "resolver_el": 84.012458,
+          "resolver_el_deg": 84.012458,
+          "drive": "2214",
+          "site": 116,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4571ML107786"
+        }
+      ],
+      "selection": {
+        "usable_frames": 10,
+        "dropped_frames": 16,
+        "dropped": [
+          {
+            "imageid": "4571ML1077870001802053C00_DXXX",
+            "reasons": [
+              "downward mast_el -47.76 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870011802054C00_DXXX",
+            "reasons": [
+              "downward mast_el -47.18 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870021802055C00_DXXX",
+            "reasons": [
+              "downward mast_el -46.61 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870031802056C00_DXXX",
+            "reasons": [
+              "downward mast_el -48.33 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870041802057C00_DXXX",
+            "reasons": [
+              "downward mast_el -48.91 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870051802058C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.71 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870061802059C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.14 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870071802060C00_DXXX",
+            "reasons": [
+              "downward mast_el -36.57 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870081802061C00_DXXX",
+            "reasons": [
+              "downward mast_el -38.27 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870091802062C00_DXXX",
+            "reasons": [
+              "downward mast_el -38.84 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870101802063C00_DXXX",
+            "reasons": [
+              "downward mast_el -57.21 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870111802064C00_DXXX",
+            "reasons": [
+              "downward mast_el -56.65 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870121802065C00_DXXX",
+            "reasons": [
+              "downward mast_el -56.08 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870131802066C00_DXXX",
+            "reasons": [
+              "downward mast_el -58.35 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077870141802067C00_DXXX",
+            "reasons": [
+              "downward mast_el -58.92 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4571ML1077880061802068C00_DXXX",
+            "reasons": [
+              "downward mast_el -44.11 deg < -22.0 deg"
+            ],
+            "errors": []
+          }
+        ],
+        "drive_candidates": [
+          {
+            "drive": 2214,
+            "frames": 10,
+            "az_span_deg": 60.772,
+            "el_center_deg": -6.116,
+            "drive_match": true
+          }
+        ],
+        "selected_drive": 2214,
+        "selected_frames": 10,
+        "selected_az_span_deg": 60.772,
+        "selected_el_center_deg": -6.116,
+        "el_cluster_tolerance_deg": 3.0
+      },
+      "api": {
+        "sol": 4571,
+        "api_items": 52,
+        "api_total": 52,
+        "pages": 1,
+        "cache_sources": [
+          "cache"
+        ]
+      },
+      "stitch": {
+        "projection": "equirectangular azimuth/elevation",
+        "width": 4269,
+        "height": 1063,
+        "az_min_deg": 120.9485,
+        "az_max_deg": 195.5846,
+        "el_min_deg": -15.1073,
+        "el_max_deg": 3.7191,
+        "az_span_deg": 74.636,
+        "el_span_deg": 18.5851,
+        "common_vertical_band": true,
+        "cropped_el_union_deg": [
+          -15.4155,
+          3.786
+        ],
+        "nearest_filled_pixels": 0,
+        "output_deg_per_px": 0.017484,
+        "source_deg_per_px": 0.020631,
+        "frame_contribution": {
+          "4571ML1077860091802052C00_DXXX": 0.1858,
+          "4571ML1077860081802051C00_DXXX": 0.1858,
+          "4571ML1077860071802050C00_DXXX": 0.1858,
+          "4571ML1077860061802049C00_DXXX": 0.1858,
+          "4571ML1077860051802048C00_DXXX": 0.1858,
+          "4571ML1077860041802047C00_DXXX": 0.1858,
+          "4571ML1077860031802046C00_DXXX": 0.1858,
+          "4571ML1077860021802045C00_DXXX": 0.1858,
+          "4571ML1077860011802044C00_DXXX": 0.1858,
+          "4571ML1077860001802043C00_DXXX": 0.1858
+        },
+        "feather": "Hann-like az/el weight with 0.04 floor, normalised across overlapping frames"
+      },
+      "credit": "NASA/JPL-Caltech/MSSS, MSL Mastcam raw images"
+    },
+    {
+      "id": "ALT-10_upper_bench_sol4609",
+      "station_id": "ALT-10",
+      "station_name": "Upper Bench",
+      "sol": 4609,
+      "drive": "2730",
+      "site": 117,
+      "filename": "alt10_upper_bench_sol4609.jpg",
+      "file_name": "alt10_upper_bench_sol4609.jpg",
+      "pano_url": "assets/panos/alt10_upper_bench_sol4609.jpg",
+      "file": "assets/panos/alt10_upper_bench_sol4609.jpg",
+      "frame_count": 10,
+      "az_range": [
+        88.7214,
+        163.5903
+      ],
+      "el_range": [
+        -14.411,
+        -3.6545
+      ],
+      "dimensions": [
+        4282,
+        615
+      ],
+      "width": 4282,
+      "height": 615,
+      "sha256": "ed976dcc45753481f60761f643b6cf78cb6fe597e2ad0b3f848ffb5a8939e6c9",
+      "az_min_deg": 88.7214,
+      "az_max_deg": 163.5903,
+      "el_min_deg": -14.411,
+      "el_max_deg": -3.6545,
+      "az_span_deg": 74.869,
+      "el_span_deg": 10.7565,
+      "projection": "equirectangular azimuth/elevation",
+      "crop_bottom_px": 24,
+      "quality": 92,
+      "frames": [
+        {
+          "imageid": "4609ML1079960001803492C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960001803492C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960001803492c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960001803492c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3492",
+          "pds_spacecraft_clock_start": "806660786.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "eb05eba9782147c384a7a35b627dafb079e4b7be57d884e34a8f99d0542c63f9",
+          "sha256": "76d9064957a7bb955da8ee63b271501c7ac84e0cf670c662510e97a11307a797",
+          "sha256_jpeg": "76d9064957a7bb955da8ee63b271501c7ac84e0cf670c662510e97a11307a797",
+          "mast_az": 95.653413,
+          "mast_el": -5.224362,
+          "mast_az_deg": 95.653413,
+          "mast_el_deg": -5.224362,
+          "resolver_az_deg": 95.653413,
+          "resolver_el": 84.775638,
+          "resolver_el_deg": 84.775638,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        },
+        {
+          "imageid": "4609ML1079960011803493C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960011803493C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960011803493c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960011803493c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3493",
+          "pds_spacecraft_clock_start": "806660798.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "ab81064fc5b6c54b941d6504ac3a71a99d8e546e76e692c3785a3af3beeba747",
+          "sha256": "78804af3dc0ecda3728bd8e6e0026cfe12d5fe4614429b1ac28bb25185e03f4a",
+          "sha256_jpeg": "78804af3dc0ecda3728bd8e6e0026cfe12d5fe4614429b1ac28bb25185e03f4a",
+          "mast_az": 102.101022,
+          "mast_el": -6.785501,
+          "mast_az_deg": 102.101022,
+          "mast_el_deg": -6.785501,
+          "resolver_az_deg": 102.101022,
+          "resolver_el": 83.214499,
+          "resolver_el_deg": 83.214499,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        },
+        {
+          "imageid": "4609ML1079960021803494C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960021803494C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960021803494c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960021803494c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3494",
+          "pds_spacecraft_clock_start": "806660808.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "7498acb2f941abd7f24354eea7c5c1b90172369561e4dc5e418d5e296f23370d",
+          "sha256": "e05c22844d0061097c8364e78406733efa5bbb8e6834332376e014360383036b",
+          "sha256_jpeg": "e05c22844d0061097c8364e78406733efa5bbb8e6834332376e014360383036b",
+          "mast_az": 108.975942,
+          "mast_el": -8.087662,
+          "mast_az_deg": 108.975942,
+          "mast_el_deg": -8.087662,
+          "resolver_az_deg": 108.975942,
+          "resolver_el": 81.912338,
+          "resolver_el_deg": 81.912338,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        },
+        {
+          "imageid": "4609ML1079960031803495C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960031803495C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960031803495c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960031803495c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3495",
+          "pds_spacecraft_clock_start": "806660817.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "7e498e9ab451237ad2573b9f629862be14cc92715922c508e4243bffd68b8340",
+          "sha256": "b55453d7c5e5d43bd0643bbc9a80df07dcc752cd87b3e969333d86caeacb62f8",
+          "sha256_jpeg": "b55453d7c5e5d43bd0643bbc9a80df07dcc752cd87b3e969333d86caeacb62f8",
+          "mast_az": 115.564441,
+          "mast_el": -9.285602,
+          "mast_az_deg": 115.564441,
+          "mast_el_deg": -9.285602,
+          "resolver_az_deg": 115.564441,
+          "resolver_el": 80.714398,
+          "resolver_el_deg": 80.714398,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        },
+        {
+          "imageid": "4609ML1079960041803496C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960041803496C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960041803496c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960041803496c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3496",
+          "pds_spacecraft_clock_start": "806660828.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "00baaa373ff605e5b47a75fff1ebed84f5c4951e02e83f38f0536a3e40611f8e",
+          "sha256": "55e1488913d9d6616d582fdbdb1aeae2578b5fa59143e354d22449a00ea03a36",
+          "sha256_jpeg": "55e1488913d9d6616d582fdbdb1aeae2578b5fa59143e354d22449a00ea03a36",
+          "mast_az": 122.28707,
+          "mast_el": -10.353251,
+          "mast_az_deg": 122.28707,
+          "mast_el_deg": -10.353251,
+          "resolver_az_deg": 122.28707,
+          "resolver_el": 79.646749,
+          "resolver_el_deg": 79.646749,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        },
+        {
+          "imageid": "4609ML1079960051803497C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960051803497C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960051803497c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960051803497c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3497",
+          "pds_spacecraft_clock_start": "806660844.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "89b7007db3380324089f3289f0262362b15544b327ad8d1146ee252bfd291509",
+          "sha256": "20235e6593e7862fa172f38f5bb6bc1c3f72992386a4151032837cdf99dcb316",
+          "sha256_jpeg": "20235e6593e7862fa172f38f5bb6bc1c3f72992386a4151032837cdf99dcb316",
+          "mast_az": 129.151906,
+          "mast_el": -11.277891,
+          "mast_az_deg": 129.151906,
+          "mast_el_deg": -11.277891,
+          "resolver_az_deg": 129.151906,
+          "resolver_el": 78.722109,
+          "resolver_el_deg": 78.722109,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        },
+        {
+          "imageid": "4609ML1079960061803498C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960061803498C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960061803498c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960061803498c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3498",
+          "pds_spacecraft_clock_start": "806660855.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "3d5c8f91dfe68cbeab65856aa2714f229ae4ef4de6248886095731d54c5a3fd5",
+          "sha256": "b10551cc19582df37686e6294892da448e4d26f33e4c5d31332fd89d6d641ea0",
+          "sha256_jpeg": "b10551cc19582df37686e6294892da448e4d26f33e4c5d31332fd89d6d641ea0",
+          "mast_az": 135.980933,
+          "mast_el": -12.060322,
+          "mast_az_deg": 135.980933,
+          "mast_el_deg": -12.060322,
+          "resolver_az_deg": 135.980933,
+          "resolver_el": 77.939678,
+          "resolver_el_deg": 77.939678,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        },
+        {
+          "imageid": "4609ML1079960071803499C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960071803499C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960071803499c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960071803499c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3499",
+          "pds_spacecraft_clock_start": "806660866.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "574be6114e3b02d2b32733ab90e3abc6c543859228c1600e2731218b3df5e0ba",
+          "sha256": "bd18105c27a5e166deade418cfc926c54075011c9612c5d53e24e2452e0b7156",
+          "sha256_jpeg": "bd18105c27a5e166deade418cfc926c54075011c9612c5d53e24e2452e0b7156",
+          "mast_az": 142.783661,
+          "mast_el": -12.671783,
+          "mast_az_deg": 142.783661,
+          "mast_el_deg": -12.671783,
+          "resolver_az_deg": 142.783661,
+          "resolver_el": 77.328217,
+          "resolver_el_deg": 77.328217,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        },
+        {
+          "imageid": "4609ML1079960081803500C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960081803500C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960081803500c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960081803500c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3500",
+          "pds_spacecraft_clock_start": "806660876.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "198ac98d38aa870499e47c0cfd5ba57c0221a460739fea5fed8c03c529e6ac02",
+          "sha256": "a88956e8b61a32b0b7ecdb8b1021d473e4df7a4b217847ac314c34b6ff3ea95f",
+          "sha256_jpeg": "a88956e8b61a32b0b7ecdb8b1021d473e4df7a4b217847ac314c34b6ff3ea95f",
+          "mast_az": 149.743093,
+          "mast_el": -13.102991,
+          "mast_az_deg": 149.743093,
+          "mast_el_deg": -13.102991,
+          "resolver_az_deg": 149.743093,
+          "resolver_el": 76.897009,
+          "resolver_el_deg": 76.897009,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        },
+        {
+          "imageid": "4609ML1079960091803501C00_DXXX",
+          "url": "https://mars.nasa.gov/msl-raw-images/msss/04609/mcam/4609ML1079960091803501C00_DXXX.jpg",
+          "pds_label_url": "https://pds-imaging.jpl.nasa.gov/data/msl/msl_mmm/data_MSLMST/volume_0040_raw/SURFACE/4609/4609ml1079960091803501c00_dxxx.xml",
+          "pds_product_id": "urn:nasa:pds:msl_mmm:data_mslmst:4609ml1079960091803501c00_dxxx",
+          "pds_product_type": "MMMEDR",
+          "pds_camera_product_id": "3501",
+          "pds_spacecraft_clock_start": "806660886.0000",
+          "pds_release_number": "0040",
+          "pds_label_sha256": "29180aee657662fbf688183f6073560e7bdbd47b017a96355ef8604afe2d5e4e",
+          "sha256": "77881ec780993777574cd8cf4db9436fb41f364b4e0171e9e06971129891945d",
+          "sha256_jpeg": "77881ec780993777574cd8cf4db9436fb41f364b4e0171e9e06971129891945d",
+          "mast_az": 156.658292,
+          "mast_el": -13.361165,
+          "mast_az_deg": 156.658292,
+          "mast_el_deg": -13.361165,
+          "resolver_az_deg": 156.658292,
+          "resolver_el": 76.638835,
+          "resolver_el_deg": 76.638835,
+          "drive": "2730",
+          "site": 117,
+          "dimensions": [
+            672,
+            896
+          ],
+          "source_width": 672,
+          "source_height": 896,
+          "crop_bottom_px": 24,
+          "crop_bounds": {
+            "left": 0,
+            "top": 0,
+            "right": 672,
+            "bottom": 872
+          },
+          "sequence_id": "4609ML107996"
+        }
+      ],
+      "selection": {
+        "usable_frames": 25,
+        "dropped_frames": 40,
+        "dropped": [
+          {
+            "imageid": "4609ML1079940011803468C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.91 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940021803469C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.91 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940031803470C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.91 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940041803471C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.92 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940051803472C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.93 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940061803473C00_DXXX",
+            "reasons": [
+              "downward mast_el -28.93 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940071803474C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.23 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940081803475C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.22 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940091803476C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.22 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940101803477C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.21 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940111803478C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.21 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940121803479C00_DXXX",
+            "reasons": [
+              "downward mast_el -33.20 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940131803480C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.47 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940141803481C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.48 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940151803482C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.49 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940161803483C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.49 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940171803484C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.50 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940181803485C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.51 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940191803486C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.79 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940201803487C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.79 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940211803488C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.78 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940221803489C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.78 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940231803490C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.77 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079940241803491C00_DXXX",
+            "reasons": [
+              "downward mast_el -41.77 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970001803502C00_DXXX",
+            "reasons": [
+              "downward mast_el -47.93 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970011803503C00_DXXX",
+            "reasons": [
+              "downward mast_el -47.36 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970021803504C00_DXXX",
+            "reasons": [
+              "downward mast_el -46.79 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970031803505C00_DXXX",
+            "reasons": [
+              "downward mast_el -48.51 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970041803506C00_DXXX",
+            "reasons": [
+              "downward mast_el -49.08 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970051803507C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.89 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970061803508C00_DXXX",
+            "reasons": [
+              "downward mast_el -37.32 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970071803509C00_DXXX",
+            "reasons": [
+              "downward mast_el -36.76 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970081803510C00_DXXX",
+            "reasons": [
+              "downward mast_el -38.46 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970091803511C00_DXXX",
+            "reasons": [
+              "downward mast_el -39.03 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970101803512C00_DXXX",
+            "reasons": [
+              "downward mast_el -57.39 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970111803513C00_DXXX",
+            "reasons": [
+              "downward mast_el -56.83 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970121803514C00_DXXX",
+            "reasons": [
+              "downward mast_el -56.27 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970131803515C00_DXXX",
+            "reasons": [
+              "downward mast_el -58.53 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079970141803516C00_DXXX",
+            "reasons": [
+              "downward mast_el -59.10 deg < -22.0 deg"
+            ],
+            "errors": []
+          },
+          {
+            "imageid": "4609ML1079980061803517C00_DXXX",
+            "reasons": [
+              "downward mast_el -44.11 deg < -22.0 deg"
+            ],
+            "errors": []
+          }
+        ],
+        "drive_candidates": [
+          {
+            "drive": 2730,
+            "frames": 10,
+            "az_span_deg": 61.005,
+            "el_center_deg": -10.221,
+            "drive_match": true
+          },
+          {
+            "drive": 2538,
+            "frames": 6,
+            "az_span_deg": 22.748,
+            "el_center_deg": -5.007,
+            "drive_match": false
+          },
+          {
+            "drive": 2538,
+            "frames": 6,
+            "az_span_deg": 22.747,
+            "el_center_deg": -9.017,
+            "drive_match": false
+          }
+        ],
+        "selected_drive": 2730,
+        "selected_frames": 10,
+        "selected_az_span_deg": 61.005,
+        "selected_el_center_deg": -10.221,
+        "el_cluster_tolerance_deg": 3.0
+      },
+      "api": {
+        "sol": 4609,
+        "api_items": 130,
+        "api_total": 130,
+        "pages": 2,
+        "cache_sources": [
+          "network"
+        ]
+      },
+      "stitch": {
+        "projection": "equirectangular azimuth/elevation",
+        "width": 4282,
+        "height": 615,
+        "az_min_deg": 88.7214,
+        "az_max_deg": 163.5903,
+        "el_min_deg": -14.411,
+        "el_max_deg": -3.6545,
+        "az_span_deg": 74.869,
+        "el_span_deg": 10.7565,
+        "common_vertical_band": true,
+        "cropped_el_union_deg": [
+          -22.5478,
+          4.4823
+        ],
+        "nearest_filled_pixels": 0,
+        "output_deg_per_px": 0.017484,
+        "source_deg_per_px": 0.020631,
+        "frame_contribution": {
+          "4609ML1079960001803492C00_DXXX": 0.1852,
+          "4609ML1079960011803493C00_DXXX": 0.1852,
+          "4609ML1079960021803494C00_DXXX": 0.1852,
+          "4609ML1079960031803495C00_DXXX": 0.1852,
+          "4609ML1079960041803496C00_DXXX": 0.1852,
+          "4609ML1079960051803497C00_DXXX": 0.1852,
+          "4609ML1079960061803498C00_DXXX": 0.1852,
+          "4609ML1079960071803499C00_DXXX": 0.185,
+          "4609ML1079960081803500C00_DXXX": 0.185,
+          "4609ML1079960091803501C00_DXXX": 0.1852
+        },
+        "feather": "Hann-like az/el weight with 0.04 floor, normalised across overlapping frames"
+      },
+      "credit": "NASA/JPL-Caltech/MSSS, MSL Mastcam raw images"
+    }
+  ]
 }

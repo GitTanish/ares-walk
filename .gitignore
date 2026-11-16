@@ -10,6 +10,9 @@ venv/
 # Local browser-test screenshots
 tests/artifacts/
 
+# Mastcam builder download cache (NASA raw frames + PDS labels)
+data/cache/
+
 # Raw planetary rasters stay local (HiRISE/THEMIS/CRISM products can be many GB)
 data/raw/*.tif
 data/raw/*.tiff

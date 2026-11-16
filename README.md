@@ -295,8 +295,8 @@ python src/build_mastcam_panos.py
 
 - **Enrichment:** Raw API Mastcam items lack pointing data. The builder fetches PDS4 labels from `https://pds-imaging.jpl.nasa.gov` and extracts `AZIMUTH FINAL-RESOLVER` and `ELEVATION FINAL-RESOLVER` (`mast_el_deg ≈ resolver_deg - 90.0°`), `SITE`, `DRIVE`, and PDS product IDs.
 - **Filtering:** Downward rover-deck frames (`mast_el < -22°`) and tiny thumbnails are filtered out. The largest horizontal sequence matching on drive and elevation within ±3° is selected and sorted by azimuth.
-- **Processing:** Crops the bottom 24 px black JPL metadata bar, stitches frames using cylindrical/equirectangular projection with edge feathering, and outputs wide JPEGs to `assets/panos/`.
-- **Manifest:** Records SHA-256 hashes, PDS product IDs, frame azimuths/elevations, and crop boundaries in `assets/panos/manifest.json`.
+- **Processing:** Crops the bottom 24 px black JPL metadata bar, stitches frames with an equirectangular azimuth/elevation projection and edge feathering, and crops to the vertical band shared by the selected frames so the panorama has no black stair-step voids. Wide JPEGs are written to `assets/panos/`.
+- **Manifest:** `assets/panos/manifest.json` keeps the consumer-facing `landmarks` mapping and records output SHA-256 hashes, PDS product LIDs, frame azimuths/elevations, drive/site, crop boundaries, and the projection/coverage report.
 
 ## Optional local rasters & PDS provenance
 
@@ -307,6 +307,8 @@ python src/build_mastcam_panos.py
 *themis*.tif, *inertia*.tif        -> thermal inertia
 *crism*.tif, *d2300*.tif           -> D2300 absorption
 ```
+
+Sampling is georeferenced: each 72 × 72 cell centre is converted ENU → Mars 2000 lon/lat → source CRS and sampled bilinearly, with the grid origin derived from the same waypoint extent used by the terrain engine. A raster without a CRS is resized only as a documented `resized_no_crs` fallback, and a raster that misses the mission box is rejected rather than silently stretched.
 
 When `data/raw/` is empty (default), the mission bundle honestly reports `data_sources.raster.status = "not_used"` and `terrain.mode = "calibrated_digital_twin"`. The browser console displays a `CALIBRATED TWIN FALLBACK` badge next to the Base Layer selector. When real rasters are provided and loaded, the badge dynamically switches to `GENUINE PDS RASTER` and surfaces exact PDS product IDs and SHA-256 file hashes.
 
@@ -319,7 +321,7 @@ python src\pds_ingest.py
 
 `src/pds_ingest.py` validates terrain-array lengths, the route, station count, and reserve margin before writing `data/mission_bundle.json`. The verification sheet is written to `assets/mount_sharp_eva_plan.png`.
 
-The committed run was generated with Python 3.11.9 and the NASA endpoints live at build time. Re-running with `--offline` uses the curated image and waypoint fallbacks and is suitable for disconnected demos.
+The committed bundle was compiled with Python 3.11.9 using `--offline` (curated NASA image and waypoint fallbacks). Re-run without `--offline` to refresh live NASA endpoints; `--offline` remains suitable for disconnected demos.
 
 ### Browser UI automated testing
 

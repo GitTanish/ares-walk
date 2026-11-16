@@ -70,7 +70,9 @@ from mars_eva_engine import (  # noqa: E402
     FALLBACK_WAYPOINTS,
     GRID_H,
     GRID_W,
+    MARGIN_M,
     build_scene,
+    project_track,
     render_plan,
 )
 
@@ -428,6 +430,105 @@ def _file_sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def _display_path(path: Path) -> str:
+    """Repository-relative path when possible, absolute otherwise."""
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+# Mars 2000 sphere, used as the geographic hub for all raster reprojection.
+MARS_GEO_PROJ4 = "+proj=longlat +a=3396190 +b=3396190 +no_defs"
+
+
+def _enu_to_lonlat(easting: np.ndarray, northing: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Mars 2000 sphere equirectangular: x = R*lon, y = R*lat (radians)."""
+    lon = np.degrees(np.asarray(easting, dtype=float) / MARS_RADIUS)
+    lat = np.degrees(np.asarray(northing, dtype=float) / MARS_RADIUS)
+    return lon, lat
+
+
+def _sample_band_on_enu_grid(
+    band: np.ndarray,
+    transform: Any,
+    crs: Any,
+    *,
+    origin_easting: float,
+    origin_northing: float,
+    width: int,
+    height: int,
+    cell_m: float,
+) -> tuple[np.ndarray, str]:
+    """Bilinearly sample a georeferenced band at ENU cell centres.
+
+    The target grid is the same 72 x 72 Mars 2000 sphere ENU grid used by the
+    EVA engine.  Points are converted ENU -> lon/lat -> source CRS, then
+    sampled in source pixel space.  This is a real georeferenced resample, not
+    a stretch of the raster's pixel array.
+    """
+    from rasterio.crs import CRS
+    from rasterio.warp import transform as warp_transform
+    from scipy import ndimage
+
+    cols = np.arange(width, dtype=float)
+    rows = np.arange(height, dtype=float)
+    east = origin_easting + (cols + 0.5) * cell_m
+    north = origin_northing + (rows + 0.5) * cell_m
+    east_grid, north_grid = np.meshgrid(east, north)
+    lon, lat = _enu_to_lonlat(east_grid, north_grid)
+
+    if crs is None:
+        raise ValueError("raster has no CRS; cannot georeference onto the ENU grid")
+
+    # Always reproject through rasterio so planetographic latitude, prime
+    # meridian conventions, and projected Mars CRSs are all handled correctly.
+    hub = CRS.from_proj4(MARS_GEO_PROJ4)
+    source_x, source_y = warp_transform(
+        hub, crs, lon.ravel().tolist(), lat.ravel().tolist()
+    )
+    source_x = np.asarray(source_x, dtype=float)
+    source_y = np.asarray(source_y, dtype=float)
+    sampling = (
+        "enu_bilinear_geographic" if crs.is_geographic else "enu_bilinear_projected"
+    )
+
+    inv = ~transform
+    pixel_x, pixel_y = inv * (source_x, source_y)
+    pixel_x = np.asarray(pixel_x, dtype=float)
+    pixel_y = np.asarray(pixel_y, dtype=float)
+
+    band = np.asarray(band, dtype=float)
+    src_h, src_w = band.shape
+    in_bounds = (
+        (pixel_x >= -0.5) & (pixel_x <= src_w - 0.5)
+        & (pixel_y >= -0.5) & (pixel_y <= src_h - 0.5)
+    )
+    sampled = ndimage.map_coordinates(
+        band,
+        np.vstack([np.clip(pixel_y, 0, src_h - 1), np.clip(pixel_x, 0, src_w - 1)]),
+        order=1,
+        mode="nearest",
+    )
+    sampled = sampled.reshape(height, width)
+    sampled[~in_bounds.reshape(height, width)] = np.nan
+    if not np.isfinite(sampled).any():
+        raise ValueError(
+            "no raster pixels intersect the mission ENU box; check the CRS/product footprint"
+        )
+    return sampled, sampling
+
+
+def _fill_nan(arr: np.ndarray) -> np.ndarray:
+    out = np.asarray(arr, dtype=float).copy()
+    bad = ~np.isfinite(out)
+    if bad.all():
+        raise ValueError("raster band contains no finite values")
+    if bad.any():
+        out[bad] = np.nanmedian(out)
+    return out
+
+
 def attach_panoramas(stations: list[dict[str, Any]], manifest_path: Path = MANIFEST_PATH) -> list[dict[str, Any]]:
     """Wire stitched landmark panoramas into station specs."""
     default_panos = {
@@ -465,8 +566,19 @@ def attach_panoramas(stations: list[dict[str, Any]], manifest_path: Path = MANIF
     return stations
 
 
-def load_local_rasters(raw_dir: Path = RAW_DIR) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
-    """Read and reproject optional rasters; never fatal when rasterio is absent."""
+def load_local_rasters(
+    raw_dir: Path = RAW_DIR,
+    *,
+    origin_easting: float = ORIGIN_EASTING,
+    origin_northing: float = ORIGIN_NORTHING,
+) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
+    """Read and georeference optional rasters onto the 72 x 72 ENU grid.
+
+    Rasters are converted ENU -> Mars 2000 lon/lat -> source CRS and sampled at
+    cell centres.  A raster with no CRS is resized as a last resort and marked
+    ``resized_no_crs`` so provenance stays honest.  Missing rasterio is never
+    fatal: the calibrated twin is used instead.
+    """
     report: dict[str, Any] = {
         "status": "not_used",
         "raw_dir": str(raw_dir),
@@ -478,6 +590,14 @@ def load_local_rasters(raw_dir: Path = RAW_DIR) -> tuple[dict[str, np.ndarray], 
             "d2300": {"status": "fallback", "source": "calibrated_digital_twin"},
         },
         "grid_crs": "Mars 2000 sphere equirectangular (R=3396190 m, Gale 4.80S, 137.38E)",
+        "grid": {
+            "width": GRID_W,
+            "height": GRID_H,
+            "cell_m": CELL_M,
+            "origin_easting": round(float(origin_easting), 3),
+            "origin_northing": round(float(origin_northing), 3),
+            "sample": "cell centres, easting/northing increasing with column/row",
+        },
         "note": "Pre-cropped local rasters are optional; the calibrated twin is the fallback.",
     }
     raw_dir.mkdir(parents=True, exist_ok=True)
@@ -512,10 +632,12 @@ def load_local_rasters(raw_dir: Path = RAW_DIR) -> tuple[dict[str, np.ndarray], 
 
         file_sha256 = _file_sha256(path)
         pds_product_id = None
+        pds_label_path = None
         for cand in [path.with_suffix(".xml"), path.with_suffix(".lbl"), path.with_suffix(".LBL")]:
             if cand.exists():
                 try:
                     txt = cand.read_text(encoding="utf-8", errors="ignore")
+                    pds_label_path = _display_path(cand)
                     m = re.search(r"urn:nasa:pds:[^\s<>\"]+", txt)
                     if m:
                         pds_product_id = m.group(0)
@@ -531,21 +653,46 @@ def load_local_rasters(raw_dir: Path = RAW_DIR) -> tuple[dict[str, np.ndarray], 
 
         try:
             with rasterio.open(path) as src:
-                band = src.read(1, masked=True)
-                arr = np.asarray(band.filled(np.nan), dtype=float)
-                # Raster rows run north-to-south; the analysis grid is north-up.
-                arr = np.flipud(arr)
-                arr = _resize_to_grid(arr)
+                band = np.asarray(src.read(1, masked=True).filled(np.nan), dtype=float)
+                raster_crs = str(src.crs) if src.crs else None
+                if src.crs:
+                    arr, sampling = _sample_band_on_enu_grid(
+                        band,
+                        src.transform,
+                        src.crs,
+                        origin_easting=origin_easting,
+                        origin_northing=origin_northing,
+                        width=GRID_W,
+                        height=GRID_H,
+                        cell_m=CELL_M,
+                    )
+                    arr = _fill_nan(arr)
+                else:
+                    # Keep a documented fallback rather than pretending a
+                    # stretched array is georeferenced.
+                    arr = _resize_to_grid(np.flipud(band))
+                    sampling = "resized_no_crs"
                 arr = _normalise_layer(arr, layer)
-                raster_crs = str(src.crs) if src.crs else "Mars 2000 Sphere Equirectangular"
+                bounds = src.bounds
+                source_meta = {
+                    "source_shape": [int(src.height), int(src.width)],
+                    "source_bounds": [
+                        round(float(bounds.left), 6), round(float(bounds.bottom), 6),
+                        round(float(bounds.right), 6), round(float(bounds.top), 6),
+                    ],
+                    "source_transform": [round(float(v), 9) for v in tuple(src.transform)[:6]],
+                }
             layers[layer] = arr
             layer_record = {
-                "path": str(path.relative_to(ROOT)),
+                "path": _display_path(path),
                 "layer": layer,
                 "shape": [GRID_H, GRID_W],
-                "crs": raster_crs,
+                "crs": raster_crs or "unknown",
+                "sampling": sampling,
                 "sha256": file_sha256,
                 "pds_product_id": pds_product_id,
+                "pds_label_path": pds_label_path,
+                **source_meta,
             }
             used.append(layer_record)
             report["layers"][layer] = {
@@ -553,20 +700,29 @@ def load_local_rasters(raw_dir: Path = RAW_DIR) -> tuple[dict[str, np.ndarray], 
                 "source": "pds_raster",
                 "sha256": file_sha256,
                 "pds_product_id": pds_product_id,
-                "path": str(path.relative_to(ROOT)),
-                "crs": raster_crs,
+                "pds_label_path": pds_label_path,
+                "path": _display_path(path),
+                "crs": raster_crs or "unknown",
+                "sampling": sampling,
+                "grid_crs": report["grid_crs"],
+                "grid_origin_easting": round(float(origin_easting), 3),
+                "grid_origin_northing": round(float(origin_northing), 3),
+                **source_meta,
             }
-            print(f"  raster: {path.name} -> {layer} (PDS: {pds_product_id}, SHA: {file_sha256[:12]})")
+            print(
+                f"  raster: {path.name} -> {layer} "
+                f"({sampling}, PDS: {pds_product_id}, SHA: {file_sha256[:12]})"
+            )
         except Exception as exc:
-            report.setdefault("errors", []).append(f"{path.name}: {str(exc)[:180]}")
+            report.setdefault("errors", []).append(f"{path.name}: {str(exc)[:220]}")
 
     if layers:
         report["status"] = "loaded"
         report["used_layers"] = sorted(layers.keys())
         report["files"] = used
         report["note"] = (
-            "Rasters reprojected and sampled onto Gale Crater ENU grid at 4.80°S, 137.38°E. "
-            "Unsupplied layers remain calibrated digital twin."
+            "Rasters reprojected and sampled at ENU cell centres on the Gale Crater grid "
+            "(Mars 2000 sphere, 4.80°S, 137.38°E). Unsupplied layers remain calibrated twin."
         )
     else:
         report["status"] = "no_usable_layers"
@@ -733,7 +889,17 @@ def compile_mission_bundle(
     station_specs = attach_panoramas(station_specs)
 
     print("  3/4  optional local rasters ...")
-    raster_layers, raster_report = load_local_rasters(raw_dir)
+    # The terrain grid is anchored to the same origin build_scene will use:
+    # min track easting/northing minus the grid margin.  Computing it here
+    # keeps raster sampling and the resulting bundle perfectly registered.
+    _, track_e0, track_n0, _, _ = project_track(track)
+    grid_origin_easting = track_e0 - MARGIN_M
+    grid_origin_northing = track_n0 - MARGIN_M
+    raster_layers, raster_report = load_local_rasters(
+        raw_dir,
+        origin_easting=grid_origin_easting,
+        origin_northing=grid_origin_northing,
+    )
     print(f"       raster status: {raster_report.get('status')}")
 
     print("  4/4  building twin + asymmetric Dijkstra ...")

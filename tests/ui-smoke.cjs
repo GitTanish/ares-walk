@@ -108,6 +108,22 @@ async function main() {
     }
     console.log('PASS: timeline controls, visor navigation, single frame and stitched mosaic');
 
+    // Second landmark (ALT-10) must load its own stitched mosaic.
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.locator('[data-mode="console"]').click();
+    await page.locator('.station-card').nth(9).click();
+    await page.locator('[data-mode="visor"]').click();
+    await page.waitForSelector('#visorMosaicWrap', { state: 'visible' });
+    await page.waitForFunction(() => document.querySelector('#vImageId').textContent === 'MOSAIC-ALT-10');
+    await page.waitForFunction(() => {
+      const canvas = document.querySelector('#visorMosaicCanvas');
+      const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+      let painted = 0;
+      for (let i = 0; i < data.length; i += 4) if (data[i] + data[i + 1] + data[i + 2] > 60) painted++;
+      return painted > 120000;
+    });
+    console.log('PASS: both landmark stitched mosaics (ALT-05, ALT-10)');
+
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.locator('[data-mode="console"]').click();
     await page.locator('#flareBtn').click();

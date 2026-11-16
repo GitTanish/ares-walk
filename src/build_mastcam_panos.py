@@ -103,6 +103,11 @@ STATION_FILENAMES = {
     "ALT-05": "alt05_layered_spur_sol4571.jpg",
     "ALT-10": "alt10_upper_bench_sol4609.jpg",
 }
+# Curiosity rover drive / site numbers come from the mission bundle waypoints.
+STATION_DRIVE_SITE = {
+    "ALT-05": {"drive": 2214, "site": 116},
+    "ALT-10": {"drive": 2730, "site": 117},
+}
 
 
 # ---------------------------------------------------------------------------
@@ -318,6 +323,11 @@ def _sequence_id(imageid: str) -> str | None:
 
 def _is_thumbnail_imageid(imageid: str) -> bool:
     return "I01_DXXX" in imageid.upper()
+
+
+def _pds_urn(imageid: str) -> str:
+    """Canonical PDS4 product LIDVID-style identifier for an MSL EDR frame."""
+    return f"urn:nasa:pds:msl_mmm:data_mslmst:{imageid.lower()}"
 
 
 def enrich_frame(
@@ -539,8 +549,8 @@ def _bilinear(channel: np.ndarray, ys: np.ndarray, xs: np.ndarray) -> np.ndarray
     x1c = np.clip(x1, 0, width - 1)
     y0c = np.clip(y0, 0, height - 1)
     y1c = np.clip(y1, 0, height - 1)
-    fx = np.clip(xs - x0, 0.0, 1.0)[..., None]
-    fy = np.clip(ys - y0, 0.0, 1.0)[..., None]
+    fx = np.clip(xs - x0, 0.0, 1.0)
+    fy = np.clip(ys - y0, 0.0, 1.0)
     v00 = channel[y0c, x0c]
     v10 = channel[y0c, x1c]
     v01 = channel[y1c, x0c]
@@ -586,21 +596,40 @@ def stitch_frames(frames: list[dict[str, Any]], cropped: dict[str, np.ndarray]) 
     el_min = min(g["el_bottom"] for g in geometry)
     el_max = max(g["el_top"] for g in geometry)
     az_span = az_max - az_min
-    el_span = el_max - el_min
-    if az_span <= 0 or el_span <= 0:
+    if az_span <= 0:
         raise ValueError("selected frames have no angular coverage")
 
-    # Match the source pixel scale; cap the canvas so the JPEG stays practical.
+    # Frame elevations often drift slightly across a mast sweep.  Using the
+    # union rectangle would leave black stair-steps where only some frames
+    # cover a pixel, so crop to the vertical band shared by every frame.  The
+    # resulting mosaic is still the full azimuth union, but has no voids and
+    # no fabricated pixels.
+    el_top_common = min(g["el_top"] for g in geometry)
+    el_bottom_common = max(g["el_bottom"] for g in geometry)
+    common_band = el_top_common > el_bottom_common
+    if common_band:
+        el_top, el_bottom = el_top_common, el_bottom_common
+    else:
+        # Pathological scan with no shared elevation: keep the union and fill
+        # residual voids from the nearest covered pixel below.
+        el_top, el_bottom = el_max, el_min
+    el_span = el_top - el_bottom
+    if el_span <= 0:
+        raise ValueError("selected frames have no angular coverage")
+
+    # Match the source pixel scale (slightly oversampled so the panorama stays
+    # crisp on wide displays); cap the canvas so the JPEG stays practical.
     src_deg_per_px = min(
         g["hfov"] / int(g["frame"]["source_width"]) for g in geometry
     )
-    out_w = int(round(az_span / src_deg_per_px))
-    out_h = int(round(el_span / (geometry[0]["vfov"] / int(geometry[0]["frame"]["source_height"]))))
-    out_w = max(200, min(out_w, 4200))
+    deg_per_px = src_deg_per_px / 1.18
+    out_w = int(round(az_span / deg_per_px))
+    out_h = int(round(el_span / deg_per_px))
+    out_w = max(200, min(out_w, 4800))
     out_h = max(120, min(out_h, 2200))
 
     az = az_min + (np.arange(out_w, dtype=np.float64) + 0.5) * (az_span / out_w)
-    el = el_max - (np.arange(out_h, dtype=np.float64) + 0.5) * (el_span / out_h)
+    el = el_top - (np.arange(out_h, dtype=np.float64) + 0.5) * (el_span / out_h)
     az_grid, el_grid = np.meshgrid(az, el)
 
     accumulator = np.zeros((out_h, out_w, 3), dtype=np.float64)
@@ -617,12 +646,17 @@ def stitch_frames(frames: list[dict[str, Any]], cropped: dict[str, np.ndarray]) 
         el0 = g["el0"]
         el_top = g["el_top"]
 
-        xs = (az_grid - g["az_left"]) / hfov * int(frame["source_width"]) - 0.5
+        src_w = int(frame["source_width"])
+        xs = (az_grid - g["az_left"]) / hfov * src_w - 0.5
         ys = (el_top - el_grid) / vfov * int(frame["source_height"]) - 0.5
-        valid = (xs >= 0) & (xs <= int(frame["source_width"]) - 1) & (ys >= 0) & (ys <= src_h - 1)
+        # Pixel centres sit half a pixel inside the geometric frame bounds;
+        # allow that half-pixel tolerance and clamp before bilinear sampling.
+        valid = (xs >= -0.5) & (xs <= src_w - 0.5) & (ys >= -0.5) & (ys <= src_h - 0.5)
         if not valid.any():
             contribution[frame["imageid"]] = 0.0
             continue
+        xs = np.clip(xs, 0.0, src_w - 1.0)
+        ys = np.clip(ys, 0.0, src_h - 1.0)
 
         # Hann-like feather across the frame; a small floor keeps the outer
         # boundary from going transparent where only one frame covers a pixel.
@@ -637,8 +671,25 @@ def stitch_frames(frames: list[dict[str, Any]], cropped: dict[str, np.ndarray]) 
         weight_sum += weight
         contribution[frame["imageid"]] = round(float(valid.mean()), 4)
 
+    filled_pixels = 0
     if np.any(weight_sum <= 0):
-        raise ValueError("projection left uncovered output pixels")
+        # Neighbour fill keeps an unusual scan from producing black holes.
+        # The common vertical band above normally makes this a no-op.
+        filled_pixels = int((weight_sum <= 0).sum())
+        if np.any(weight_sum > 0):
+            from scipy import ndimage
+
+            _, nearest = ndimage.distance_transform_edt(weight_sum <= 0, return_indices=True)
+            nearest = tuple(nearest)
+            for channel in range(3):
+                accumulator[..., channel] = np.where(
+                    weight_sum <= 0,
+                    accumulator[..., channel][nearest],
+                    accumulator[..., channel],
+                )
+            weight_sum = np.where(weight_sum <= 0, 1.0, weight_sum)
+        else:
+            raise ValueError("projection left no covered output pixels")
     mosaic = accumulator / weight_sum[..., None]
     mosaic = np.clip(np.rint(mosaic), 0, 255).astype(np.uint8)
 
@@ -648,10 +699,17 @@ def stitch_frames(frames: list[dict[str, Any]], cropped: dict[str, np.ndarray]) 
         "height": int(out_h),
         "az_min_deg": round(float(az_min), 4),
         "az_max_deg": round(float(az_max), 4),
-        "el_min_deg": round(float(el_min), 4),
-        "el_max_deg": round(float(el_max), 4),
+        "el_min_deg": round(float(el_bottom), 4),
+        "el_max_deg": round(float(el_top), 4),
         "az_span_deg": round(float(az_span), 4),
         "el_span_deg": round(float(el_span), 4),
+        "common_vertical_band": bool(common_band),
+        "cropped_el_union_deg": [
+            round(float(el_min), 4),
+            round(float(el_max), 4),
+        ],
+        "nearest_filled_pixels": filled_pixels,
+        "output_deg_per_px": round(float(deg_per_px), 6),
         "source_deg_per_px": round(float(src_deg_per_px), 6),
         "frame_contribution": contribution,
         "feather": "Hann-like az/el weight with 0.04 floor, normalised across overlapping frames",
@@ -673,7 +731,8 @@ def build_station_pano(
 ) -> dict[str, Any]:
     station_id = str(station["id"])
     sol = int(station["sol"])
-    drive = int(station["drive"])
+    meta = STATION_DRIVE_SITE.get(station_id, {})
+    drive = int(meta.get("drive", 0))
     filename = STATION_FILENAMES.get(station_id)
     if filename is None:
         raise ValueError(f"no output filename configured for {station_id}")
@@ -714,48 +773,69 @@ def build_station_pano(
             frame, cache_dir=cache_dir, refresh=refresh, offline=offline
         )
         cropped[frame["imageid"]] = image
+        src_w = int(image_meta["source_width"])
+        src_h = int(image_meta["source_height"])
+        crop_bottom = int(image_meta["crop_bottom_px"])
         frame_meta.append({
             "imageid": frame["imageid"],
             "url": image_meta["url"],
             "pds_label_url": frame["pds_label_url"],
-            "pds_product_id": frame.get("pds_product_id"),
+            "pds_product_id": _pds_urn(frame["imageid"]),
             "pds_product_type": frame.get("pds_product_type"),
             "pds_camera_product_id": frame.get("pds_camera_product_id"),
             "pds_spacecraft_clock_start": frame.get("pds_spacecraft_clock_start"),
             "pds_release_number": frame.get("pds_release_number"),
             "pds_label_sha256": frame.get("pds_label_sha256"),
+            "sha256": image_meta["sha256_jpeg"],
             "sha256_jpeg": image_meta["sha256_jpeg"],
+            "mast_az": frame.get("mast_az_deg"),
+            "mast_el": frame.get("mast_el_deg"),
             "mast_az_deg": frame.get("mast_az_deg"),
             "mast_el_deg": frame.get("mast_el_deg"),
             "resolver_az_deg": frame.get("resolver_az_deg"),
+            "resolver_el": frame.get("resolver_el_deg"),
             "resolver_el_deg": frame.get("resolver_el_deg"),
-            "drive": frame.get("drive"),
+            "drive": str(frame.get("drive")) if frame.get("drive") is not None else None,
             "site": frame.get("site"),
-            "source_width": image_meta["source_width"],
-            "source_height": image_meta["source_height"],
-            "crop_bottom_px": image_meta["crop_bottom_px"],
-            "crop_bounds": image_meta["crop_bounds"],
+            "dimensions": [src_w, src_h],
+            "source_width": src_w,
+            "source_height": src_h,
+            "crop_bottom_px": crop_bottom,
+            "crop_bounds": {
+                "left": 0,
+                "top": 0,
+                "right": src_w,
+                "bottom": max(0, src_h - crop_bottom),
+            },
             "sequence_id": frame.get("sequence_id"),
         })
 
     mosaic, stitch_meta = stitch_frames(selected, cropped)
     ASSETS_PANO_DIR.mkdir(parents=True, exist_ok=True)
     out_path = ASSETS_PANO_DIR / filename
-    Image.fromarray(mosaic, "RGB").save(out_path, "JPEG", quality=quality, optimize=True)
+    Image.fromarray(mosaic).save(out_path, "JPEG", quality=quality, optimize=True)
     print(f"    wrote {out_path.relative_to(ROOT)}  ({out_path.stat().st_size/1024:.0f} KB)")
 
+    width = int(stitch_meta["width"])
+    height = int(stitch_meta["height"])
     entry = {
         "id": f"{station_id}_{station['name'].lower().replace(' ', '_')}_sol{sol}",
         "station_id": station_id,
         "station_name": station["name"],
         "sol": sol,
-        "drive": drive,
+        "drive": str(drive),
         "site": int(selected[0].get("site") or 0),
         "filename": filename,
+        "file_name": filename,
         "pano_url": f"assets/panos/{filename}",
         "file": f"assets/panos/{filename}",
-        "width": stitch_meta["width"],
-        "height": stitch_meta["height"],
+        "frame_count": len(frame_meta),
+        "az_range": [stitch_meta["az_min_deg"], stitch_meta["az_max_deg"]],
+        "el_range": [stitch_meta["el_min_deg"], stitch_meta["el_max_deg"]],
+        "dimensions": [width, height],
+        "width": width,
+        "height": height,
+        "sha256": _sha256(out_path.read_bytes()),
         "az_min_deg": stitch_meta["az_min_deg"],
         "az_max_deg": stitch_meta["az_max_deg"],
         "el_min_deg": stitch_meta["el_min_deg"],
@@ -811,8 +891,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
+    # Keep the consumer-facing ``landmarks`` mapping used by pds_ingest.py and a
+    # versioned schema marker so the manifest is self-describing.
     manifest = {
         "schema": "ares-walk/mastcam-mosaic-manifest@1.0",
+        "generator": "src/build_mastcam_panos.py",
+        "description": "Multi-frame Mastcam landmark stitched panoramas with honest PDS metadata.",
         "generated_utc": _now_utc(),
         "source_api": IMAGES_API,
         "pds_volume": "volume_0040_raw",
@@ -823,6 +907,7 @@ def main(argv: list[str] | None = None) -> int:
         "el_cluster_tolerance_deg": EL_CLUSTER_TOLERANCE_DEG,
         "full_frame_fov_deg": list(FULL_FRAME_FOV_DEG),
         "credit": "NASA/JPL-Caltech/MSSS, MSL Mastcam raw images",
+        "landmarks": {entry["station_id"]: entry for entry in panos},
         "panos": panos,
     }
     manifest_path = args.out_dir / "manifest.json"
