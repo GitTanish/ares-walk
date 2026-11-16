@@ -133,6 +133,82 @@ async function main() {
     assert.equal(await page.locator('#flashBanner').isVisible(), false);
     console.log('PASS: SPE activation and stand down');
 
+    // First-person certified-route EVA walk: keyboard movement, drag-look,
+    // touch pad, exit, then a full accelerated station arrival and dwell.
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.locator('[data-mode="console"]').click();
+    await page.locator('#btnStart').click();
+    await page.locator('[data-mode="visor"]').click();
+    assert.ok(await page.locator('#walkToggle').isVisible());
+    await page.locator('#walkToggle').click();
+    await page.waitForSelector('body.walk-active');
+    assert.ok(await page.locator('#walkHud').isVisible());
+    assert.equal(await page.locator('#walkToggleLabel').innerText(), 'EXIT WALK');
+    assert.match(await page.locator('#walkDistance').innerText(), /^0 \/ 647 m$/);
+    assert.match(await page.locator('#walkStations').innerText(), /^0 \/ 10$/);
+    assert.match(await page.locator('#walkNext').innerText(), /ALT-01/);
+
+    const walkDistance = async () => Number((await page.locator('#walkDistance').innerText()).match(/(\d+)\s*\//)[1]);
+    const beforeMove = await walkDistance();
+    await page.keyboard.down('w');
+    await page.waitForTimeout(1600);
+    assert.ok(Number.parseFloat(await page.locator('#walkSpeed').innerText()) > 0.1, 'walk speed should be live');
+    await page.waitForTimeout(1600);
+    await page.keyboard.up('w');
+    await page.waitForTimeout(200);
+    const afterMove = await walkDistance();
+    assert.ok(afterMove > beforeMove, `keyboard walk should advance route (${beforeMove} -> ${afterMove})`);
+
+    const headingBefore = await page.locator('#pipHeading').innerText();
+    await page.mouse.move(720, 430);
+    await page.mouse.down();
+    await page.mouse.move(880, 430, { steps: 8 });
+    await page.mouse.up();
+    await page.waitForTimeout(250);
+    assert.notEqual(await page.locator('#pipHeading').innerText(), headingBefore, 'drag should look around');
+
+    await page.setViewportSize({ width: 390, height: 900 });
+    await page.waitForTimeout(300);
+    assert.ok(await page.locator('#walkPad').isVisible(), 'touch pad should be visible on narrow screens');
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+    const beforeTouch = await walkDistance();
+    await page.locator('#walkPad .up').dispatchEvent('pointerdown', { pointerId: 7, pointerType: 'touch', bubbles: true });
+    await page.waitForTimeout(1800);
+    await page.locator('#walkPad .up').dispatchEvent('pointerup', { pointerId: 7, pointerType: 'touch', bubbles: true });
+    await page.waitForTimeout(200);
+    assert.ok(await walkDistance() > beforeTouch, 'touch pad should advance the walk');
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.waitForTimeout(250);
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    assert.equal(await page.locator('body').evaluate((el) => el.classList.contains('walk-active')), false);
+    assert.equal(await page.locator('#walkHud').isVisible(), false);
+    assert.equal(await page.locator('#walkToggleLabel').innerText(), 'WALK ROUTE');
+
+    await page.locator('[data-mode="console"]').click();
+    await page.locator('#btnStart').click();
+    await page.locator('[data-mode="visor"]').click();
+    await page.locator('#visorStepRange').evaluate((el) => {
+      el.value = '1';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await page.locator('#walkToggle').click();
+    await page.waitForSelector('#walkArrival.show');
+    assert.match(await page.locator('#walkArrivalTitle').innerText(), /ALT-01/);
+    assert.match(await page.locator('#walkArrivalEyebrow').innerText(), /STATION ARRIVAL/);
+    assert.match(await page.locator('#walkStations').innerText(), /^0 \/ 10$/);
+    await page.waitForFunction(
+      () => /^1 \/ 10$/.test(document.querySelector('#walkStations').textContent.trim()),
+      null,
+      { timeout: 20000 }
+    );
+    assert.match(await page.locator('#walkArrivalEyebrow').innerText(), /DWELL COMPLETE/);
+    assert.equal(await page.locator('#vStepNow').innerText(), '2');
+    assert.match(await page.locator('#walkMargin').innerText(), /^\+\d/);
+    await page.keyboard.press('Escape');
+    console.log('PASS: EVA walk movement, drag-look, touch pad, station arrival and dwell');
+
     await page.goto(pathToFileURL(path.join(root, 'index.html')).href);
     await page.waitForSelector('#boot.done', { state: 'attached' });
     assert.equal(await page.locator('.station-card').count(), 10);

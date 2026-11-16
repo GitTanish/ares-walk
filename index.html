@@ -1041,6 +1041,272 @@
     color: #fff;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
   }
+  /* First-person certified-route EVA walk */
+  .walk-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 178, 112, 0.52);
+    background: rgba(122, 63, 28, 0.62);
+    color: #ffe3c2;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .walk-toggle:hover { background: rgba(154, 78, 34, 0.82); color: #fff; }
+  .walk-toggle.active {
+    background: #b4542c;
+    border-color: #ffb070;
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+  .walk-toggle .walk-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffb070;
+    box-shadow: 0 0 6px rgba(255, 176, 112, 0.8);
+  }
+  body.walk-active .walk-toggle .walk-dot {
+    background: #7ef0b0;
+    box-shadow: 0 0 6px rgba(126, 240, 176, 0.9);
+  }
+  body.walk-active .visor-station-dock,
+  body.walk-active .street-nav-btn,
+  body.walk-active .pano-hint,
+  body.walk-active .pano-scale,
+  body.walk-active #visorPanoBtn,
+  body.walk-active #visorPhotoBtn { display: none !important; }
+
+  .walk-hud {
+    display: none;
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    width: min(382px, calc(100vw - 32px));
+    z-index: 15;
+    padding: 11px 13px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    background: rgba(10, 14, 18, 0.76);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.42);
+    color: #f3f7ff;
+    pointer-events: none;
+  }
+  body.walk-active .walk-hud { display: block; }
+  .walk-hud-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 7px;
+  }
+  .walk-hud-head span {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(228, 237, 252, 0.62);
+  }
+  .walk-hud-head b {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    color: #ffbd85;
+    border: 1px solid rgba(255, 178, 112, 0.38);
+    border-radius: 3px;
+    padding: 2px 5px;
+  }
+  .walk-hud-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px 10px;
+  }
+  .walk-stat span {
+    display: block;
+    font-family: var(--mono);
+    font-size: 8.5px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(228, 237, 252, 0.48);
+  }
+  .walk-stat b {
+    display: block;
+    margin-top: 1px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: #f3f7ff;
+    white-space: nowrap;
+  }
+  .walk-stat b.warn { color: #ffc46b; }
+  .walk-stat b.danger { color: #ff8c94; }
+  .walk-bar {
+    height: 4px;
+    margin: 9px 0 7px;
+    border-radius: 2px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .walk-bar i {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #5f9df0 0%, #ffbd85 100%);
+    transition: width 0.18s linear;
+  }
+  .walk-hud-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: rgba(228, 237, 252, 0.72);
+  }
+  .walk-hud-foot span:last-child { text-align: right; }
+  .walk-hud-foot .warn { color: #ffc46b; }
+  .walk-hud-foot .danger { color: #ff8c94; }
+
+  .walk-arrival {
+    display: none;
+    position: absolute;
+    top: 104px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(440px, calc(100vw - 32px));
+    z-index: 16;
+    padding: 10px 14px 11px;
+    border: 1px solid rgba(255, 196, 140, 0.50);
+    border-radius: 8px;
+    background: rgba(32, 20, 12, 0.86);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
+    color: #fff5e8;
+    pointer-events: none;
+  }
+  .walk-arrival.show { display: block; animation: walkArrive 0.28s ease-out; }
+  @keyframes walkArrive {
+    from { opacity: 0; transform: translate(-50%, -8px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+  .walk-arrival-eyebrow {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    color: #ffbd85;
+  }
+  .walk-arrival-title {
+    margin-top: 2px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .walk-arrival-sub {
+    margin-top: 2px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: rgba(255, 239, 220, 0.74);
+  }
+  .walk-dwell {
+    height: 3px;
+    margin-top: 8px;
+    border-radius: 2px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.16);
+  }
+  .walk-dwell i {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: #ffbd85;
+  }
+
+  .walk-controls {
+    display: none;
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    z-index: 14;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    background: rgba(10, 14, 18, 0.66);
+    backdrop-filter: blur(10px);
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: rgba(228, 237, 252, 0.66);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  body.walk-active .walk-controls { display: flex; }
+  .walk-controls kbd {
+    display: inline-block;
+    min-width: 15px;
+    padding: 1px 4px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.07);
+    color: #f3f7ff;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-align: center;
+  }
+
+  .walk-pad {
+    display: none;
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 15;
+    grid-template-columns: repeat(3, 44px);
+    grid-template-rows: repeat(3, 44px);
+    gap: 4px;
+    touch-action: none;
+  }
+  body.walk-active .walk-pad { display: none; }
+  .walk-pad button {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 7px;
+    background: rgba(10, 14, 18, 0.70);
+    color: #f3f7ff;
+    font-size: 15px;
+    line-height: 1;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    backdrop-filter: blur(8px);
+  }
+  .walk-pad button.active { background: rgba(180, 84, 44, 0.88); border-color: #ffb070; }
+  .walk-pad .up { grid-area: 1 / 2; }
+  .walk-pad .left { grid-area: 2 / 1; }
+  .walk-pad .right { grid-area: 2 / 3; }
+  .walk-pad .down { grid-area: 3 / 2; }
+  .walk-pad-center {
+    grid-area: 2 / 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 8.5px;
+    letter-spacing: 0.08em;
+    color: rgba(255, 189, 133, 0.82);
+    border: 1px dashed rgba(255, 189, 133, 0.28);
+    border-radius: 50%;
+  }
+  @media (pointer: coarse), (max-width: 760px) {
+    body.walk-active .walk-controls { display: none; }
+    body.walk-active .walk-pad { display: grid; }
+  }
+
   .pano-hint {
     position: absolute;
     left: 50%;
@@ -1423,6 +1689,25 @@
     .pano-hint, .pano-scale { display: none; }
     .visor-media-toggle button { padding: 4px 7px; font-size: 9.5px; }
     .visor-media-toggle { align-self: stretch; justify-content: center; }
+    body.walk-active .visor-pip { display: none; }
+    body.walk-active .visor-card-right { display: none; }
+    .walk-hud {
+      left: 8px;
+      right: 160px;
+      bottom: 8px;
+      width: auto;
+      padding: 8px 9px;
+    }
+    .walk-hud-head { gap: 4px; margin-bottom: 5px; }
+    .walk-hud-head span { font-size: 8.5px; letter-spacing: 0.05em; white-space: nowrap; }
+    .walk-hud-head b { display: none; }
+    .walk-hud-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 8px; }
+    .walk-stat b { font-size: 10.5px; }
+    .walk-hud-foot { font-size: 8px; gap: 6px; }
+    .walk-hud-foot span { white-space: nowrap; }
+    .walk-arrival { top: 184px; width: calc(100vw - 16px); }
+    .walk-arrival-title { font-size: 14px; }
+    .walk-pad { right: 8px; bottom: 8px; grid-template-columns: repeat(3, 42px); grid-template-rows: repeat(3, 42px); }
   }
 </style>
 </head>
@@ -1606,9 +1891,13 @@
             <div class="subline" id="vStationCoords">ENU -- · Elev -- · Slope --</div>
           </div>
 
-          <div class="visor-media-toggle" role="group" aria-label="Visor media view">
+          <div class="visor-media-toggle" role="group" aria-label="Visor views and EVA walk">
             <button type="button" id="visorPanoBtn" class="active" aria-pressed="true">360° PANORAMA</button>
             <button type="button" id="visorPhotoBtn" aria-pressed="false">MASTCAM FRAME</button>
+            <button type="button" id="walkToggle" class="walk-toggle" aria-pressed="false" title="Start first-person EVA walk">
+              <span class="walk-dot" aria-hidden="true"></span>
+              <span id="walkToggleLabel">WALK ROUTE</span>
+            </button>
           </div>
 
           <div class="visor-card visor-card-right">
@@ -1657,6 +1946,49 @@
 
         <div class="pano-hint" id="panoHint">Drag to look · Scroll to zoom · Double-click resets</div>
         <div class="pano-scale" id="panoScale">HFOV 74° · 1.0×</div>
+
+        <div class="walk-hud" id="walkHud" aria-hidden="true">
+          <div class="walk-hud-head">
+            <span>EVA WALK · FIRST PERSON</span>
+            <b id="walkHudMode">CERTIFIED ROUTE</b>
+          </div>
+          <div class="walk-hud-grid">
+            <div class="walk-stat"><span>Speed</span><b id="walkSpeed">0.0 m/s</b></div>
+            <div class="walk-stat"><span>Route</span><b id="walkDistance">0 / 647 m</b></div>
+            <div class="walk-stat"><span>Stations</span><b id="walkStations">0 / 10</b></div>
+            <div class="walk-stat"><span>PLSS</span><b id="walkEnergy">400 / 400 Wh</b></div>
+            <div class="walk-stat"><span>Reserve</span><b id="walkMargin">+--- Wh</b></div>
+            <div class="walk-stat"><span>Clock</span><b id="walkClock">0:00</b></div>
+          </div>
+          <div class="walk-bar" aria-hidden="true"><i id="walkProgressFill"></i></div>
+          <div class="walk-hud-foot">
+            <span id="walkNext">NEXT --</span>
+            <span id="walkSurface">SLOPE -- · CLEAR</span>
+          </div>
+        </div>
+
+        <div class="walk-arrival" id="walkArrival" role="status" aria-live="polite">
+          <div class="walk-arrival-eyebrow" id="walkArrivalEyebrow">STATION ARRIVAL · SCIENCE DWELL</div>
+          <div class="walk-arrival-title" id="walkArrivalTitle">--</div>
+          <div class="walk-arrival-sub" id="walkArrivalSub">--</div>
+          <div class="walk-dwell" aria-hidden="true"><i id="walkDwellFill"></i></div>
+        </div>
+
+        <div class="walk-controls" id="walkControls" aria-hidden="true">
+          <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move</span>
+          <span><kbd>Shift</kbd> sprint</span>
+          <span><kbd>Q</kbd><kbd>E</kbd> turn</span>
+          <span>drag to look</span>
+          <span><kbd>Esc</kbd> exit</span>
+        </div>
+
+        <div class="walk-pad" id="walkPad" aria-label="Touch EVA movement controls">
+          <button type="button" class="up" data-walk-key="w" aria-label="Walk forward">▲</button>
+          <button type="button" class="left" data-walk-key="a" aria-label="Strafe left">◀</button>
+          <div class="walk-pad-center" aria-hidden="true">EVA</div>
+          <button type="button" class="right" data-walk-key="d" aria-label="Strafe right">▶</button>
+          <button type="button" class="down" data-walk-key="s" aria-label="Walk backward">▼</button>
+        </div>
 
         <div class="visor-pip">
           <span class="pip-tag" id="pipHeading">HDG --°</span>
@@ -1865,6 +2197,15 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
       panX: 0, velX: 0, isDragging: false,
       lastX: 0, pointerId: null, raf: 0,
       failedUrls: new Set()
+    },
+    walk: {
+      active: false, ready: false, raf: 0, lastT: 0, hudAt: 0, pipAt: 0,
+      keys: new Set(), route: null,
+      x: 0, y: 0, groundZ: 0, startX: 0, startY: 0, startStep: 0,
+      progress: 0, startAlong: 0, offRoute: false, speed: 0, movedM: 0,
+      walkedWh: 0, dwellWh: 0, consumedWh: 0, baselineWh: 0, clockS: 0, baseClock: 0,
+      visited: new Set(), dwell: null, arrival: null, arriveHideAt: 0,
+      trail: [], warnAt: 0, complete: false, stoneKey: ''
     }
   };
 
@@ -2465,12 +2806,49 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
     }
   }
 
+  // World-anchored gravel for first-person walking. Rebuilding the panorama
+  // every few metres must not teleport the near-field stones.
+  function buildWalkStones(cam, N, hitDist) {
+    const stones = [];
+    const R = 52, cell = 2.2;
+    const i0 = Math.floor((cam.x - R) / cell), i1 = Math.ceil((cam.x + R) / cell);
+    const j0 = Math.floor((cam.y - R) / cell), j1 = Math.ceil((cam.y + R) / cell);
+    for (let gx = i0; gx <= i1; gx++) {
+      for (let gy = j0; gy <= j1; gy++) {
+        if (hash2(gx * 0.731 + 17.3, gy * 0.917 - 9.1) > 0.31) continue;
+        const jx = (hash2(gx + 0.37, gy + 4.1) - 0.5) * cell * 0.95;
+        const jy = (hash2(gx - 3.3, gy + 8.6) - 0.5) * cell * 0.95;
+        const wx = gx * cell + jx, wy = gy * cell + jy;
+        const rr = Math.hypot(wx - cam.x, wy - cam.y);
+        if (rr < 1.35 || rr > R) continue;
+        const base = heightAtWorldBilinear(wx, wy);
+        if (base == null) continue;
+        const az = Math.atan2(wx - cam.x, wy - cam.y);
+        const idx = Math.floor(norm360(az * RAD2DEG) / 360 * N) % N;
+        if (rr > hitDist[idx] * 1.05) continue;
+        const radius = 0.018 + Math.pow(hash2(gx + 11.1, gy - 5.4), 2.6) * 0.31;
+        const seed = hash2(gx - 1.7, gy + 12.9) * 100;
+        stones.push({
+          x: wx, y: wy, z: base, radius,
+          h: radius * (0.55 + hash2(gx + 6.2, gy + 1.4) * 0.55),
+          seed,
+          color: rockRgb(cellFromWorld(wx, wy), rr, 0.68 + hash2(gx + 2.5, gy - 7.7) * 0.26)
+        });
+      }
+    }
+    return stones;
+  }
+
   // Builds the per-step equirect terrain twin: local ray-marched skyline,
   // perspective ground bands, distant massif backdrop, boulders and gravel.
-  function buildPanoScene() {
+  // A camera override lets the first-person walk keep the same renderer while
+  // moving off the timeline.
+  function buildPanoScene(camOverride, keyOverride) {
     const row = S.timeline[S.current];
-    if (!row) return;
-    const cam = { x: row[0], y: row[1], z: row[2] + PANO.eyeHeightM };
+    if (!row && !camOverride) return;
+    const cam = camOverride
+      ? { x: camOverride.x, y: camOverride.y, z: camOverride.z }
+      : { x: row[0], y: row[1], z: row[2] + PANO.eyeHeightM };
     const N = PANO.samples;
     const horizon = new Float32Array(N);
     const hitDist = new Float32Array(N);
@@ -2586,29 +2964,34 @@ const EMBEDDED_BUNDLE = {"schema":"ares-walk/mission-bundle@1.0","generated_utc"
     });
 
     // Seeded gravel scatter for near-field ground texture (stable per step).
-    const rnd = mulberry32(9137 + S.current * 7919);
-    const stones = [];
-    for (let k = 0; k < 520; k++) {
-      // Log-distance sampling keeps the foreground as dense as the middle ground.
-      const rr = 1.35 * Math.pow(52 / 1.35, rnd());
-      const az = rnd() * TAU;
-      const wx = cam.x + Math.sin(az) * rr;
-      const wy = cam.y + Math.cos(az) * rr;
-      const base = heightAtWorldBilinear(wx, wy);
-      if (base == null) continue;
-      const idx = Math.floor(norm360(az * RAD2DEG) / 360 * N) % N;
-      if (rr > hitDist[idx] * 1.05) continue;
-      const radius = 0.018 + Math.pow(rnd(), 2.6) * 0.31;
-      stones.push({
-        x: wx, y: wy, z: base, radius,
-        h: radius * (0.55 + rnd() * 0.55),
-        seed: rnd() * 100,
-        color: rockRgb(cellFromWorld(wx, wy), rr, 0.68 + rnd() * 0.26)
-      });
+    // Walking uses a world lattice so rebuilds do not move the foreground.
+    const stones = camOverride
+      ? buildWalkStones(cam, N, hitDist)
+      : [];
+    if (!camOverride) {
+      const rnd = mulberry32(9137 + S.current * 7919);
+      for (let k = 0; k < 520; k++) {
+        // Log-distance sampling keeps the foreground as dense as the middle ground.
+        const rr = 1.35 * Math.pow(52 / 1.35, rnd());
+        const az = rnd() * TAU;
+        const wx = cam.x + Math.sin(az) * rr;
+        const wy = cam.y + Math.cos(az) * rr;
+        const base = heightAtWorldBilinear(wx, wy);
+        if (base == null) continue;
+        const idx = Math.floor(norm360(az * RAD2DEG) / 360 * N) % N;
+        if (rr > hitDist[idx] * 1.05) continue;
+        const radius = 0.018 + Math.pow(rnd(), 2.6) * 0.31;
+        stones.push({
+          x: wx, y: wy, z: base, radius,
+          h: radius * (0.55 + rnd() * 0.55),
+          seed: rnd() * 100,
+          color: rockRgb(cellFromWorld(wx, wy), rr, 0.68 + rnd() * 0.26)
+        });
+      }
     }
 
     S.pano.scene = { cam, N, horizon: smooth, hitDist, bands, bandDist: PANO.bandDist, boulders, stones };
-    S.pano.sceneKey = String(S.current);
+    S.pano.sceneKey = keyOverride || String(S.current);
   }
 
   /* ---------------- WebGL2 terrain renderer ----------------
@@ -3238,29 +3621,12 @@ void main() {
     });
   }
 
-  function drawPano() {
-    const cv = $('visorPano');
-    if (!cv || !S.b || !S.timeline.length) return;
-    if (document.body.classList.contains('visor-photo-mode')) return;
-    const viewport = $('visorViewport') || cv;
-    const rect = viewport.getBoundingClientRect();
-    if (rect.width < 8 || rect.height < 8) return;
-    if (!S.pano.scene || S.pano.sceneKey !== String(S.current)) buildPanoScene();
-    const scene = S.pano.scene;
-    if (!scene) return;
-
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const cw = Math.round(rect.width * dpr), ch = Math.round(rect.height * dpr);
-    if (cv.width !== cw || cv.height !== ch) { cv.width = cw; cv.height = ch; }
-    const ctx = cv.getContext('2d');
-    if (!ctx) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const w = rect.width, h = rect.height;
-    const heading = S.pano.heading, pitch = S.pano.pitch, hfov = S.pano.hfov;
-    const focal = (w / 2) / Math.tan(hfov * DEG / 2);
-    const cy = h / 2;
-    const horizonY = cy + focal * Math.tan(pitch * DEG);
-
+  // Paints the sky, ray-marched ground, distant relief and foreground props for
+  // the 2D terrain-twin renderer. The WebGL path replaces this while walking.
+  function drawPanoWorld2D(ctx, w, h, heading, pitch, focal, cy, horizonY, scene) {
+    const pitchRad = pitch * DEG;
+    const hfov = 2 * Math.atan(w / 2 / focal) * RAD2DEG;
+    const walking = !!(S.walk && S.walk.active && S.walk.ready);
     // Dusty Martian sky: dark at zenith, glowing butterscotch at the horizon.
     ctx.fillStyle = '#241f1b';
     ctx.fillRect(0, 0, w, h);
@@ -3302,8 +3668,7 @@ void main() {
     // between the terrain-twin distance bands, then world-anchored texture adds
     // gravel, ripples and broad patches that fade out before they can shimmer.
     const stepX = w > 1200 ? 2 : 1;
-    const pitchRad = pitch * DEG;
-    const GS = w > 1000 ? 3 : 2;
+    const GS = walking ? 4 : (w > 1000 ? 3 : 2);
     const gw = Math.max(1, Math.ceil(w / GS)), gh = Math.max(1, Math.ceil(h / GS));
     let gcv = S.pano.groundCv;
     if (!gcv) gcv = S.pano.groundCv = document.createElement('canvas');
@@ -3540,6 +3905,61 @@ void main() {
       if (yH > -6 && yH < h + 6) ctx.fillRect(x, yH - 1.5, stepX + 0.75, 3);
     }
 
+  }
+
+  function drawPano() {
+    const cv = $('visorPano');
+    if (!cv || !S.b || !S.timeline.length) return;
+    if (document.body.classList.contains('visor-photo-mode')) return;
+    const viewport = $('visorViewport') || cv;
+    const rect = viewport.getBoundingClientRect();
+    if (rect.width < 8 || rect.height < 8) return;
+    const walking = !!(S.walk && S.walk.active && S.walk.ready);
+    let walkCam = null;
+    let desiredKey = String(S.current);
+    if (walking) {
+      walkCam = {
+        x: S.walk.x,
+        y: S.walk.y,
+        z: S.walk.groundZ + PANO.eyeHeightM + Math.sin(S.walk.clockS * 5.2) * Math.min(0.035, S.walk.speed * 0.03)
+      };
+      desiredKey = 'walk:' + Math.round(walkCam.x / 8) + ':' + Math.round(walkCam.y / 8);
+    }
+    if (!S.pano.scene || S.pano.sceneKey !== desiredKey) buildPanoScene(walkCam, desiredKey);
+    const scene = S.pano.scene;
+    if (!scene) return;
+    if (walkCam) {
+      scene.cam.x = walkCam.x;
+      scene.cam.y = walkCam.y;
+      scene.cam.z = walkCam.z;
+    }
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cw = Math.round(rect.width * dpr), ch = Math.round(rect.height * dpr);
+    if (cv.width !== cw || cv.height !== ch) { cv.width = cw; cv.height = ch; }
+    const ctx = cv.getContext('2d');
+    if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const w = rect.width, h = rect.height;
+    const heading = S.pano.heading, pitch = S.pano.pitch, hfov = S.pano.hfov;
+    const focal = (w / 2) / Math.tan(hfov * DEG / 2);
+    const cy = h / 2;
+    const horizonY = cy + focal * Math.tan(pitch * DEG);
+
+    // First-person walking uses the GPU raymarcher when a hardware WebGL2 device
+    // is available. The canvas path remains the quality-equivalent fallback.
+    let glCanvas = null;
+    if (walking && !S.pano.glFailed) {
+      const G = S.pano.gl || initPanoGL();
+      if (G && !G.soft) glCanvas = renderPanoGL(w, h, dpr, heading, pitch, focal, scene);
+    }
+    if (glCanvas) {
+      ctx.drawImage(glCanvas, 0, 0, w, h);
+    } else {
+      drawPanoWorld2D(ctx, w, h, heading, pitch, focal, cy, horizonY, scene);
+    }
+    const cam = scene.cam;
+
     // Project a world point into the panorama view.
     const project = (x, y, z) => {
       const dx = x - cam.x, dy = y - cam.y;
@@ -3588,6 +4008,29 @@ void main() {
     routeStroke();
     ctx.restore();
 
+    // Walked trail projected onto the terrain.
+    if (walking && S.walk.trail.length > 1) {
+      ctx.save();
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      let trailPen = false;
+      for (let i = 0; i < S.walk.trail.length; i++) {
+        const q = S.walk.trail[i];
+        const p = project(q[0], q[1], (heightAtWorldBilinear(q[0], q[1]) || 0) + 0.16);
+        if (!p) { trailPen = false; continue; }
+        if (!trailPen) { ctx.moveTo(p.x, p.y); trailPen = true; }
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.strokeStyle = 'rgba(20, 15, 10, 0.45)';
+      ctx.lineWidth = 3.2;
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(126, 240, 176, 0.82)';
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+      ctx.restore();
+    }
+
     // Stations: distance-scaled markers, decluttered labels.
     const nearest = nearestStationForStep(S.current);
     const visibleStations = [];
@@ -3595,15 +4038,19 @@ void main() {
       const z = (terrainAt(s.x, s.y).elev || 0) + 0.6;
       const p = project(s.x, s.y, z);
       if (!p || p.dist > 780) return;
-      visibleStations.push({ s, p, active: !!(nearest && nearest.index === s.index) });
+      const active = walking
+        ? Math.hypot(s.x - cam.x, s.y - cam.y) < 26 && !S.walk.visited.has(s.index)
+        : !!(nearest && nearest.index === s.index);
+      const visited = walking ? S.walk.visited.has(s.index) : S.current >= s.arrivalIndex;
+      visibleStations.push({ s, p, active, visited });
     });
 
-    visibleStations.forEach(({ p, active }) => {
+    visibleStations.forEach(({ p, active, visited }) => {
       const ms = clamp(8.4 - p.dist / 150, 2.6, active ? 9.4 : 7.6);
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(Math.PI / 4);
-      ctx.fillStyle = active ? '#ffd7a4' : 'rgba(247, 233, 211, 0.78)';
+      ctx.fillStyle = active ? '#ffd7a4' : visited ? 'rgba(126, 240, 176, 0.82)' : 'rgba(247, 233, 211, 0.78)';
       ctx.strokeStyle = 'rgba(18, 20, 22, 0.8)';
       ctx.lineWidth = 1.2;
       ctx.fillRect(-ms / 2, -ms / 2, ms, ms);
@@ -3725,6 +4172,7 @@ void main() {
   }
 
   function setVisorMedia(mode) {
+    if (S.walk.active && mode === 'photo') exitWalk({ silent: true });
     S.media = mode === 'photo' ? 'photo' : 'pano';
     const photoMode = S.media === 'photo';
     document.body.classList.toggle('visor-photo-mode', photoMode);
@@ -4177,6 +4625,11 @@ void main() {
       }
     }
 
+    if (S.walk.active && S.walk.trail.length > 1) {
+      strokePath(ctx, t, S.walk.trail, 'rgba(12, 14, 16, 0.78)', isMiniPip ? 3 : 4, [], 0.9);
+      strokePath(ctx, t, S.walk.trail, '#ffbd85', isMiniPip ? 1.6 : 2.2, [], 1);
+    }
+
     if (S.flare && S.flare.path && S.flare.path.length > 1) {
       strokePath(ctx, t, S.flare.path, 'rgba(12, 14, 16, 0.85)', 5, [], 0.9);
       strokePath(ctx, t, S.flare.path, '#e0606d', 3, [6, 4], 1);
@@ -4219,11 +4672,16 @@ void main() {
 
     // Science stations
     if (S.overlays.stations) {
-      const currentStation = stationAtStep(S.current);
+      const currentStation = S.walk.active
+        ? (S.walk.dwell ? S.walk.dwell.station : S.stations.find((s) =>
+          !S.walk.visited.has(s.index) && Math.hypot(s.x - S.walk.x, s.y - S.walk.y) < 12) || null)
+        : stationAtStep(S.current);
       S.stations.forEach((s) => {
         const [px, py] = worldToScreen(s.x, s.y, t);
         const aborted = !!(S.flare && S.abort.has(s.index));
-        const visited = S.current >= s.arrivalIndex;
+        const visited = S.walk.active
+          ? S.walk.visited.has(s.index)
+          : S.current >= s.arrivalIndex;
         const isCurrent = !!(currentStation && currentStation.index === s.index);
         const fill = aborted ? '#d15c68' : isCurrent ? '#ffffff' : visited ? '#4f9f78' : '#d9e6fa';
         ctx.save();
@@ -4252,7 +4710,27 @@ void main() {
     if (!isMiniPip) drawTag(ctx, 'ROVER BASE', bx, by - 16, 'rgba(23,26,32,0.95)', '#ffffff');
 
     // Active Crew Position Marker + Heading Wedge
-    if (currentRow) {
+    if (S.walk.active) {
+      const [cx, cy] = worldToScreen(S.walk.x, S.walk.y, t);
+      const hdg = S.pano.heading * DEG;
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(Math.atan2(-Math.cos(hdg), Math.sin(hdg)));
+      ctx.fillStyle = 'rgba(255, 189, 133, 0.26)';
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, isMiniPip ? 16 : 22, -0.45, 0.45);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      ctx.fillStyle = '#ffbd85';
+      ctx.strokeStyle = '#111317';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(cx, cy, isMiniPip ? 4 : 5.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.restore();
+    } else if (currentRow) {
       const [cx, cy] = worldToScreen(currentRow[0], currentRow[1], t);
       const nextRow = S.timeline[Math.min(S.timeline.length - 1, S.current + 1)] || currentRow;
       const hdg = Math.atan2(-(nextRow[1] - currentRow[1]), nextRow[0] - currentRow[0]);
@@ -4388,6 +4866,637 @@ void main() {
     const mapH = worldH * scale;
     const t = { w, h, scale, ox: (w - mapW) / 2, oy: (h - mapH) / 2, mapW, mapH };
     renderMapScene(ctx, t, true);
+  }
+
+  /* ---------------- First-Person Certified-Route EVA Walk ---------------- */
+  const WALK = {
+    corridorM: 14,
+    arrivalM: 5.0,
+    turnDegPerSec: 95,
+    idleDrawMs: 34
+  };
+
+  // The committed route as a polyline with cumulative along-route distance.
+  function buildWalkRoute() {
+    const raw = (S.b && S.b.route && S.b.route.path) || [];
+    const pts = [];
+    raw.forEach((p) => {
+      const x = Number(p[0]), y = Number(p[1]);
+      if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+      if (pts.length) {
+        const last = pts[pts.length - 1];
+        if (Math.hypot(x - last[0], y - last[1]) < 1e-6) return;
+      }
+      pts.push([x, y]);
+    });
+    if (!pts.length && S.timeline.length) pts.push([S.timeline[0][0], S.timeline[0][1]]);
+    const cum = [0], lens = [], headings = [];
+    for (let i = 1; i < pts.length; i++) {
+      const dx = pts[i][0] - pts[i - 1][0];
+      const dy = pts[i][1] - pts[i - 1][1];
+      const len = Math.hypot(dx, dy);
+      lens.push(len);
+      headings.push(norm360(Math.atan2(dx, dy) * RAD2DEG));
+      cum.push(cum[i - 1] + len);
+    }
+    return {
+      pts,
+      cum,
+      lens,
+      headings,
+      total: cum[cum.length - 1] || 0
+    };
+  }
+
+  // Closest point on the certified polyline. `along` is distance from the base end.
+  function projectWalkRoute(route, x, y) {
+    if (!route || route.pts.length < 2) {
+      return { x, y, along: 0, dist: 0, seg: 0, heading: 0 };
+    }
+    let best = null;
+    for (let i = 0; i < route.pts.length - 1; i++) {
+      const a = route.pts[i], b = route.pts[i + 1];
+      const dx = b[0] - a[0], dy = b[1] - a[1];
+      const len2 = dx * dx + dy * dy;
+      const t = len2 > 1e-12 ? clamp(((x - a[0]) * dx + (y - a[1]) * dy) / len2, 0, 1) : 0;
+      const px = a[0] + dx * t, py = a[1] + dy * t;
+      const d = Math.hypot(x - px, y - py);
+      if (!best || d < best.dist) {
+        best = {
+          x: px, y: py,
+          along: route.cum[i] + route.lens[i] * t,
+          dist: d,
+          seg: i,
+          heading: route.headings[i] || 0
+        };
+      }
+    }
+    return best || { x, y, along: 0, dist: 0, seg: 0, heading: 0 };
+  }
+
+  function walkStepForProgress(progress) {
+    const w = S.walk;
+    if (!w.stepAlong || !w.stepAlong.length) return S.current;
+    let best = 0;
+    for (let i = 0; i < w.stepAlong.length; i++) {
+      if (w.stepAlong[i] <= progress + 0.6) best = i;
+    }
+    return best;
+  }
+
+  function walkStationAlong(station) {
+    if (!S.walk.route || !station) return 0;
+    return projectWalkRoute(S.walk.route, station.x, station.y).along;
+  }
+
+  function nextWalkStation() {
+    const w = S.walk;
+    if (!w.route || !w.stepAlong) return null;
+    let behind = null;
+    for (let i = 0; i < S.stations.length; i++) {
+      const s = S.stations[i];
+      if (w.visited.has(s.index)) continue;
+      const along = walkStationAlong(s);
+      if (along >= w.progress - 3) return { station: s, along };
+      if (!behind) behind = { station: s, along };
+    }
+    return behind;
+  }
+
+  // Local walking speed from the same grade/sand rules used by the planner.
+  function walkSpeedFor(grade, sand, sprint) {
+    const p = S.b.physics || {};
+    let speed = Number(p.walk_speed_flat_m_s || 1.15);
+    if (grade >= 0) speed /= 1 + 4.2 * grade;
+    else speed *= 1 + 0.22 * Math.min(0.6, -grade);
+    speed *= 1 - 0.38 * clamp(Number(sand) || 0, 0, 1);
+    speed = clamp(speed, 0.30, 1.45);
+    if (sprint) speed = clamp(speed * Number(p.sprint_multiplier || 1.24), 0.30, 1.80);
+    return speed;
+  }
+
+  // Adapted Pandolf metabolic rate in watts, mirrored from the Python engine.
+  function walkMetabolicW(speed, grade, sand) {
+    const p = S.b.physics || {};
+    const body = Number(p.astronaut_body_kg || 78);
+    const load = Number(p.suit_plss_kg || 52);
+    const gravRatio = Number(p.gravity_ratio || 0.37944);
+    const gEff = 100 * grade * gravRatio;
+    const gradeTerm = gEff >= 0 ? 0.35 * speed * gEff : 0.35 * speed * gEff * 0.55;
+    const terrainFactor = 1 + 0.55 * clamp(Number(sand) || 0, 0, 1);
+    const ratio = load / body;
+    let m = 1.5 * body +
+      2 * (body + load) * ratio * ratio +
+      terrainFactor * (body + load) * (1.5 * speed * speed + gradeTerm);
+    m *= Number(p.suit_metabolic_overhead || 1.10);
+    return clamp(m, 140, 1250);
+  }
+
+  // A candidate footing is valid when it is inside the corridor, off hazards,
+  // below the slope limit, and still inside the terrain raster.
+  function walkCanStand(x, y) {
+    const proj = projectWalkRoute(S.walk.route, x, y);
+    if (proj.dist > WALK.corridorM) return { ok: false, reason: 'CORRIDOR LIMIT', proj };
+    const h = heightAtWorldBilinear(x, y);
+    if (h == null) return { ok: false, reason: 'NO TERRAIN', proj };
+    const info = terrainAt(x, y);
+    const slopeMax = Number((S.b.physics || {}).hazard_slope_deg || 20.5);
+    if (info.hazard) return { ok: false, reason: 'HAZARD BUFFER', proj, h, info };
+    if (info.slope > slopeMax + 0.05) return { ok: false, reason: 'SLOPE LIMIT', proj, h, info };
+    return { ok: true, reason: '', proj, h, info };
+  }
+
+  function walkBlocked(reason, now) {
+    const w = S.walk;
+    w.speed = 0;
+    w.blockReason = reason || 'NO FOOTING';
+    w.blockAt = now;
+  }
+
+  function pushWalkTrail() {
+    const w = S.walk;
+    const last = w.trail[w.trail.length - 1];
+    if (!last || Math.hypot(w.x - last[0], w.y - last[1]) >= 1.2) {
+      w.trail.push([w.x, w.y]);
+      if (w.trail.length > 2400) w.trail.shift();
+    }
+  }
+
+  function walkApplyStep(index) {
+    const idx = clamp(Math.round(Number(index) || 0), 0, Math.max(0, S.timeline.length - 1));
+    if (S.current === idx) return;
+    S.current = idx;
+    syncScrubbers();
+    updateAll();
+  }
+
+  function showWalkArrival(station, now) {
+    const w = S.walk;
+    const p = S.b.physics || {};
+    w.arrival = { station, hideAt: 0, complete: false };
+    w.dwell = {
+      station,
+      elapsed: 0,
+      duration: Number(p.dwell_seconds_per_station || 180),
+      energyStart: w.dwellWh
+    };
+    setText('walkArrivalEyebrow', 'STATION ARRIVAL · SCIENCE DWELL');
+    setText('walkArrivalTitle', station.id + ' — ' + station.name);
+    setText('walkArrivalSub', 'DWELL 0 / ' + fmtNum(w.dwell.duration, 0) + ' s sim · 12× · +0.00 Wh');
+    const fill = $('walkDwellFill');
+    if (fill) fill.style.width = '0%';
+    const el = $('walkArrival');
+    if (el) el.classList.add('show');
+    if (S.current !== station.arrivalIndex) walkApplyStep(station.arrivalIndex);
+  }
+
+  function finishWalkDwell(now) {
+    const w = S.walk;
+    if (!w.dwell) return;
+    const station = w.dwell.station;
+    const p = S.b.physics || {};
+    const dwellWh = Number(p.dwell_metabolic_w || 150) * w.dwell.duration / 3600;
+    w.visited.add(station.index);
+    w.dwell = null;
+    w.arrival = { station, hideAt: now + 2800, complete: true };
+    setText('walkArrivalEyebrow', 'DWELL COMPLETE · STATION VISITED');
+    setText('walkArrivalSub', '+ ' + fmtNum(dwellWh, 2) + ' Wh · route resumes');
+    const fill = $('walkDwellFill');
+    if (fill) fill.style.width = '100%';
+    const el = $('walkArrival');
+    if (el) el.classList.add('show');
+    const depart = station.departIndex > station.arrivalIndex
+      ? station.departIndex
+      : Math.min(S.timeline.length - 1, station.arrivalIndex + 1);
+    walkApplyStep(depart);
+    showToast(station.id + ' dwell complete · ' + fmtNum(dwellWh, 1) + ' Wh · station visited');
+  }
+
+  function maybeWalkArrival(now) {
+    const w = S.walk;
+    if (w.dwell) return;
+    let hit = null;
+    for (let i = 0; i < S.stations.length; i++) {
+      const s = S.stations[i];
+      if (w.visited.has(s.index)) continue;
+      if (Math.hypot(s.x - w.x, s.y - w.y) <= WALK.arrivalM) { hit = s; break; }
+    }
+    if (hit) showWalkArrival(hit, now);
+  }
+
+  function updateWalkArrivalUi(now) {
+    const w = S.walk;
+    const el = $('walkArrival');
+    if (!el) return;
+    if (w.dwell) {
+      const d = w.dwell;
+      const p = S.b.physics || {};
+      const dwellW = Number(p.dwell_metabolic_w || 150);
+      const percent = d.duration > 0 ? clamp(d.elapsed / d.duration * 100, 0, 100) : 100;
+      const fill = $('walkDwellFill');
+      if (fill) fill.style.width = percent.toFixed(1) + '%';
+      setText('walkArrivalSub',
+        'DWELL ' + fmtNum(d.elapsed, 0) + ' / ' + fmtNum(d.duration, 0) +
+        ' s sim · 12× · +' + fmtNum(dwellW * d.elapsed / 3600, 2) + ' Wh');
+      el.classList.add('show');
+      return;
+    }
+    if (w.arrival) {
+      if (w.arrival.hideAt && now > w.arrival.hideAt) {
+        el.classList.remove('show');
+        w.arrival = null;
+      } else if (w.arrival.complete) {
+        el.classList.add('show');
+      }
+    }
+  }
+
+  function walkingSlopeStatus(info, now) {
+    const w = S.walk;
+    if (w.dwell) return 'DWELL LOCK';
+    if (w.blockReason && now - w.blockAt < 1300) return w.blockReason;
+    if (info.hazard) return 'HAZARD BUFFER';
+    const limit = Number((S.b.physics || {}).hazard_slope_deg || 20.5);
+    if (info.slope > limit + 0.05) return 'SLOPE LIMIT';
+    if (info.rf) return 'RF SHADOW';
+    return 'CLEAR';
+  }
+
+  function updateWalkHud(now) {
+    const w = S.walk;
+    if (!w.active) return;
+    const p = S.b.physics || {};
+    const cap = Number(p.plss_energy_budget_wh || 400);
+    const fraction = clamp(Number(p.walkback_reserve_fraction || 0.25), 0, 1);
+    const floor = cap * fraction;
+    const consumed = clamp(Number(w.baselineWh || 0) + w.walkedWh + w.dwellWh, 0, cap);
+    const remaining = Math.max(0, cap - consumed);
+    const walkback = walkbackAtWorld(w.x, w.y);
+    const margin = cap - consumed - walkback - floor;
+    const info = terrainAt(w.x, w.y);
+    const next = nextWalkStation();
+    const routePct = w.route && w.route.total > 0 ? pct(w.progress, w.route.total) : 0;
+
+    setText('walkSpeed', fmtNum(w.speed, 1) + ' m/s');
+    setText('walkDistance', fmtNum(w.progress, 0) + ' / ' + fmtNum(w.route ? w.route.total : 0, 0) + ' m');
+    setText('walkStations', w.visited.size + ' / ' + S.stations.length);
+    setText('walkEnergy', fmtNum(remaining, 0) + ' / ' + fmtNum(cap, 0) + ' Wh');
+    setText('walkMargin', (margin >= 0 ? '+' : '') + fmtNum(margin, 1) + ' Wh');
+    setText('walkClock', fmtTime(Number(w.baseClock || 0) + w.clockS));
+    setText('walkHudMode', w.dwell ? 'SCIENCE DWELL' : w.complete ? 'TRAVERSE COMPLETE' : 'CERTIFIED ROUTE');
+    const fill = $('walkProgressFill');
+    if (fill) fill.style.width = routePct.toFixed(1) + '%';
+
+    const marginEl = $('walkMargin');
+    if (marginEl) marginEl.className = margin >= cap * 0.1 ? '' : margin >= 0 ? 'warn' : 'danger';
+
+    const nextDist = next
+      ? Math.max(0, (next.along >= w.progress ? next.along - w.progress : 0))
+      : 0;
+    setText('walkNext', next
+      ? 'NEXT ' + next.station.id + ' · ' + fmtNum(nextDist, 0) + ' m'
+      : 'ALL STATIONS VISITED');
+
+    const surface = walkingSlopeStatus(info, now);
+    setText('walkSurface', 'SLOPE ' + fmtNum(info.slope, 1) + '° · ' + surface);
+    const surfaceEl = $('walkSurface');
+    if (surfaceEl) surfaceEl.className = surface === 'CLEAR' || surface === 'RF SHADOW'
+      ? (surface === 'RF SHADOW' ? 'warn' : '')
+      : 'danger';
+
+    // The immersive top bar mirrors the live walk state while the dock is hidden.
+    const dwell = w.dwell;
+    setText('vStationEyebrow', dwell
+      ? 'STATION DWELL · ' + dwell.station.id + ' · 12× SIM'
+      : 'EVA WALK · CERTIFIED ROUTE · ' + compass16(S.pano.heading));
+    setText('vStationTitle', dwell
+      ? dwell.station.id + ' — ' + dwell.station.name
+      : next
+        ? 'EN ROUTE → ' + next.station.id + ' · ' + next.station.name
+        : w.complete ? 'TRAVERSE COMPLETE · ROUTE END' : 'ROUTE END · ROVER BASE');
+    setText('vStationCoords',
+      'ENU ' + fmtNum(w.x, 0) + 'E, ' + fmtNum(w.y, 0) + 'N · Elev ' + fmtNum(w.groundZ, 1) +
+      'm · Slope ' + fmtNum(info.slope, 1) + '° · ' + (info.hazard ? 'HAZARD' : info.rf ? 'RF SHADOW' : 'CLEAR'));
+    setText('vPlssHeadline',
+      'PLSS ' + fmtNum(pct(remaining, cap), 0) + '% (' + fmtNum(remaining, 0) +
+      ' Wh) · RAD 0.010 mSv/h');
+    setText('vWalkbackLine',
+      'Walkback ' + fmtNum(walkback, 1) + ' Wh · Margin ' + (margin >= 0 ? '+' : '') +
+      fmtNum(margin, 1) + ' Wh · ' + (info.rf ? 'RF Relay Buffered' : 'UHF LOS Clear'));
+
+    updateWalkArrivalUi(now);
+  }
+
+  function walkTick(dt, now) {
+    const w = S.walk;
+    if (!w.active) return;
+    const keys = w.keys;
+    const p = S.b.physics || {};
+    const turn = (keys.has('turnright') ? 1 : 0) - (keys.has('turnleft') ? 1 : 0);
+    if (turn) {
+      S.pano.heading = norm360(S.pano.heading + turn * WALK.turnDegPerSec * dt);
+    }
+
+    if (w.dwell) {
+      const scale = Number(p.simulation_time_scale || 12);
+      const dwellW = Number(p.dwell_metabolic_w || 150);
+      const remain = Math.max(0, w.dwell.duration - w.dwell.elapsed);
+      const simDt = Math.min(remain, dt * scale);
+      w.dwell.elapsed += simDt;
+      w.clockS += simDt;
+      w.dwellWh += dwellW * simDt / 3600;
+      if (w.dwell.elapsed >= w.dwell.duration - 1e-6) finishWalkDwell(now);
+    } else {
+      w.clockS += dt;
+      let forward = (keys.has('w') ? 1 : 0) - (keys.has('s') ? 1 : 0);
+      let strafe = (keys.has('d') ? 1 : 0) - (keys.has('a') ? 1 : 0);
+      if (forward || strafe) {
+        const mag = Math.hypot(forward, strafe);
+        forward /= mag;
+        strafe /= mag;
+        const hdg = S.pano.heading * DEG;
+        const fx = Math.sin(hdg), fy = Math.cos(hdg);
+        const rx = Math.cos(hdg), ry = -Math.sin(hdg);
+        const dx = fx * forward + rx * strafe;
+        const dy = fy * forward + ry * strafe;
+        const h0 = w.groundZ;
+        const probeH = heightAtWorldBilinear(w.x + dx, w.y + dy);
+        const probeGrade = probeH == null ? 0 : (probeH - h0);
+        const infoHere = terrainAt(w.x, w.y);
+        const sprint = keys.has('shift');
+        const target = walkSpeedFor(probeGrade, infoHere.sand, sprint);
+        w.targetSpeed = target;
+        const distance = target * dt;
+        let moved = null;
+        let reason = '';
+        const attempts = [
+          [w.x + dx * distance, w.y + dy * distance],
+          [w.x + dx * distance, w.y],
+          [w.x, w.y + dy * distance]
+        ];
+        for (let k = 0; k < attempts.length; k++) {
+          const cand = walkCanStand(attempts[k][0], attempts[k][1]);
+          if (cand.ok) {
+            const d = Math.hypot(attempts[k][0] - w.x, attempts[k][1] - w.y);
+            if (d > 1e-5) { moved = { x: attempts[k][0], y: attempts[k][1], cand, d }; break; }
+          } else if (!reason) {
+            reason = cand.reason;
+          }
+        }
+        if (moved) {
+          const prevX = w.x, prevY = w.y;
+          w.x = moved.x;
+          w.y = moved.y;
+          w.groundZ = moved.cand.h;
+          const actual = moved.d;
+          w.speed = dt > 1e-5 ? actual / dt : target;
+          const grade = (moved.cand.h - h0) / Math.max(actual, 1e-6);
+          const info = moved.cand.info || terrainAt(w.x, w.y);
+          const metW = walkMetabolicW(w.speed, grade, info.sand);
+          w.walkedWh += metW * dt / 3600;
+          w.movedM += actual;
+          w.progress = moved.cand.proj.along;
+          w.offRoute = moved.cand.proj.dist > WALK.corridorM + 0.01;
+          w.blockReason = '';
+          pushWalkTrail();
+          if (prevX !== w.x || prevY !== w.y) w.stoneKey = '';
+        } else {
+          walkBlocked(reason || 'NO FOOTING', now);
+        }
+      } else {
+        w.speed = 0;
+      }
+
+      if (!w.dwell) {
+        maybeWalkArrival(now);
+        if (!w.dwell) {
+          const idx = walkStepForProgress(w.progress);
+          if (idx !== S.current) walkApplyStep(idx);
+        }
+      }
+    }
+
+    const standing = heightAtWorldBilinear(w.x, w.y);
+    if (standing != null) w.groundZ = standing;
+    w.consumedWh = clamp(Number(w.baselineWh || 0) + w.walkedWh + w.dwellWh, 0, Number(p.plss_energy_budget_wh || 400));
+    w.complete = w.visited.size >= S.stations.length && w.route &&
+      w.progress >= w.route.total - 1.5;
+
+    if (now - w.hudAt >= 100) {
+      w.hudAt = now;
+      updateWalkHud(now);
+    }
+    if (now - w.pipAt >= 200) {
+      w.pipAt = now;
+      drawPipMap();
+    }
+    const glReady = S.pano.gl && !S.pano.gl.soft;
+    if (now - w.drawAt >= (glReady ? 0 : WALK.idleDrawMs)) {
+      w.drawAt = now;
+      schedulePanoDraw();
+    }
+  }
+
+  function walkFrame(ts) {
+    const w = S.walk;
+    if (!w.active) return;
+    if (!w.lastT) w.lastT = ts;
+    const dt = clamp((ts - w.lastT) / 1000, 0, 0.12);
+    w.lastT = ts;
+    walkTick(dt, ts);
+    w.raf = requestAnimationFrame(walkFrame);
+  }
+
+  function enterWalk() {
+    if (!S.b || !S.timeline.length) return;
+    if (S.walk.active) { exitWalk(); return; }
+    if (S.flare) { showToast('SPE Active · EVA walk locked'); return; }
+    if (!document.body.classList.contains('mode-visor')) setMode('visor');
+    setVisorMedia('pano');
+    stopPlayback();
+
+    const w = S.walk;
+    const row = S.timeline[S.current] || S.timeline[0];
+    if (!row) return;
+    const route = buildWalkRoute();
+    if (!route.total) { showToast('Certified route unavailable'); return; }
+
+    w.route = route;
+    w.stepAlong = S.timeline.map((r) => projectWalkRoute(route, r[0], r[1]).along);
+    w.x = Number(row[0]);
+    w.y = Number(row[1]);
+    const g = heightAtWorldBilinear(w.x, w.y);
+    w.groundZ = g == null ? Number(row[2]) || 0 : g;
+    w.startX = w.x;
+    w.startY = w.y;
+    w.startStep = S.current;
+    const proj = projectWalkRoute(route, w.x, w.y);
+    w.progress = proj.along;
+    w.startAlong = proj.along;
+    w.baselineWh = Number(row[4]) || 0;
+    w.baseClock = Number(row[3]) || 0;
+    w.clockS = 0;
+    w.speed = 0;
+    w.targetSpeed = 0;
+    w.movedM = 0;
+    w.walkedWh = 0;
+    w.dwellWh = 0;
+    w.consumedWh = w.baselineWh;
+    w.visited = new Set(S.stations
+      .filter((s) => s.arrivalIndex < w.startStep)
+      .map((s) => s.index));
+    w.dwell = null;
+    w.arrival = null;
+    w.complete = false;
+    w.blockReason = '';
+    w.blockAt = 0;
+    w.trail = [[w.x, w.y]];
+    w.stoneKey = '';
+    w.hudAt = 0;
+    w.pipAt = 0;
+    w.drawAt = 0;
+    w.lastT = 0;
+
+    S.pano.baseHeading = route.total - proj.along < 4 ? norm360(proj.heading + 180) : proj.heading;
+    S.pano.heading = S.pano.baseHeading;
+    S.pano.pitch = PANO.defaultPitch;
+    S.pano.hfov = 74;
+    S.pano.sceneKey = '';
+    S.pano.stepKey = S.current;
+
+    w.ready = true;
+    w.active = true;
+    document.body.classList.add('walk-active');
+    const toggle = $('walkToggle');
+    if (toggle) {
+      toggle.classList.add('active');
+      toggle.setAttribute('aria-pressed', 'true');
+      toggle.title = 'Exit first-person EVA walk';
+    }
+    setText('walkToggleLabel', 'EXIT WALK');
+    const hud = $('walkHud');
+    if (hud) hud.setAttribute('aria-hidden', 'false');
+    const controls = $('walkControls');
+    if (controls) controls.setAttribute('aria-hidden', 'false');
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+
+    updateWalkHud(performance.now());
+    schedulePanoDraw();
+    drawPipMap();
+    w.raf = requestAnimationFrame(walkFrame);
+    showToast('EVA walk · ' + fmtNum(route.total, 0) + ' m certified route · WASD move · Esc exits');
+  }
+
+  function exitWalk(options) {
+    const w = S.walk;
+    if (!w.active) return;
+    const opts = options || {};
+    if (w.raf) cancelAnimationFrame(w.raf);
+    w.raf = 0;
+    w.active = false;
+    w.ready = false;
+    w.keys.clear();
+    w.dwell = null;
+    w.arrival = null;
+    document.body.classList.remove('walk-active');
+    const toggle = $('walkToggle');
+    if (toggle) {
+      toggle.classList.remove('active');
+      toggle.setAttribute('aria-pressed', 'false');
+      toggle.title = 'Start first-person EVA walk';
+    }
+    setText('walkToggleLabel', 'WALK ROUTE');
+    const hud = $('walkHud');
+    if (hud) hud.setAttribute('aria-hidden', 'true');
+    const controls = $('walkControls');
+    if (controls) controls.setAttribute('aria-hidden', 'true');
+    const arrival = $('walkArrival');
+    if (arrival) arrival.classList.remove('show');
+
+    S.current = walkStepForProgress(w.progress);
+    S.pano.stepKey = -1;
+    syncScrubbers();
+    updateAll();
+    schedulePanoDraw();
+    if (!opts.silent) {
+      showToast('Walk ended · ' + fmtNum(w.movedM, 0) + ' m · ' +
+        w.visited.size + '/' + S.stations.length + ' stations · ' +
+        fmtNum(w.baselineWh + w.walkedWh + w.dwellWh, 0) + ' Wh consumed');
+    }
+  }
+
+  function handleWalkKeyDown(e) {
+    const w = S.walk;
+    if (!w.active) return false;
+    const key = String(e.key || '').toLowerCase();
+    if (key === 'escape') {
+      e.preventDefault();
+      exitWalk();
+      return true;
+    }
+    if (e.ctrlKey || e.metaKey || e.altKey) return false;
+    const map = {
+      w: 'w', a: 'a', s: 's', d: 'd', q: 'turnleft', e: 'turnright',
+      arrowup: 'w', arrowdown: 's', arrowleft: 'turnleft', arrowright: 'turnright',
+      shift: 'shift', ' ': 'action'
+    };
+    const mapped = map[key];
+    if (!mapped) return false;
+    if (mapped === 'action') {
+      e.preventDefault();
+      return true;
+    }
+    e.preventDefault();
+    w.keys.add(mapped);
+    return true;
+  }
+
+  function handleWalkKeyUp(e) {
+    const w = S.walk;
+    const key = String(e.key || '').toLowerCase();
+    const map = {
+      w: 'w', a: 'a', s: 's', d: 'd', q: 'turnleft', e: 'turnright',
+      arrowup: 'w', arrowdown: 's', arrowleft: 'turnleft', arrowright: 'turnright',
+      shift: 'shift', ' ': 'action'
+    };
+    const mapped = map[key];
+    if (mapped) w.keys.delete(mapped);
+  }
+
+  function bindWalkControls() {
+    const toggle = $('walkToggle');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        if (S.walk.active) exitWalk();
+        else enterWalk();
+      });
+    }
+
+    const pad = $('walkPad');
+    if (!pad) return;
+    const padPointers = new Map();
+    const release = (e) => {
+      const key = padPointers.get(e.pointerId);
+      if (!key) return;
+      padPointers.delete(e.pointerId);
+      S.walk.keys.delete(key);
+      const btn = pad.querySelector('[data-walk-key="' + key + '"]');
+      if (btn) btn.classList.remove('active');
+    };
+    pad.addEventListener('pointerdown', (e) => {
+      const btn = e.target && e.target.closest ? e.target.closest('[data-walk-key]') : null;
+      if (!btn) return;
+      e.preventDefault();
+      try { btn.setPointerCapture(e.pointerId); } catch (_) { /* ignore */ }
+      const key = btn.dataset.walkKey;
+      padPointers.set(e.pointerId, key);
+      S.walk.keys.add(key);
+      btn.classList.add('active');
+    });
+    pad.addEventListener('pointerup', release);
+    pad.addEventListener('pointercancel', release);
+    pad.addEventListener('lostpointercapture', release);
+    pad.addEventListener('contextmenu', (e) => e.preventDefault());
   }
 
   /* ---------------- Elevation & PLSS Walkback Profile Chart ---------------- */
@@ -4556,6 +5665,10 @@ void main() {
     if (next) next.disabled = S.current >= max;
   }
   function setStep(value, scrollCard) {
+    if (S.walk.active && Number(value) !== S.current) {
+      showToast('EVA walk active · Esc exits to timeline');
+      return;
+    }
     if (S.flare && Number(value) !== S.current) {
       showToast('SPE Active · Timeline scrubber locked');
       return;
@@ -4754,6 +5867,9 @@ void main() {
   }
 
   function updateVisorStreetView() {
+    // Walking owns the camera and the live chrome; do not snap the view back to
+    // the nearest timeline bearing while the player is moving through the scene.
+    if (S.walk.active) { schedulePanoDraw(); return; }
     const row = S.timeline[S.current];
     if (!row) return;
     const st = nearestStationForStep(S.current);
@@ -4907,6 +6023,7 @@ void main() {
   }
 
   function setMode(mode) {
+    if (S.walk.active && mode !== 'visor') exitWalk({ silent: true });
     document.body.classList.toggle('mode-visor', mode === 'visor');
     document.querySelectorAll('.mode-btn').forEach((btn) => {
       const active = btn.dataset.mode === mode;
@@ -4937,6 +6054,10 @@ void main() {
   }
   function togglePlayback() {
     if (S.flare) return;
+    if (S.walk.active) {
+      showToast('EVA walk active · Esc exits to playback');
+      return;
+    }
     if (S.playing) { stopPlayback(); return; }
     if (S.current >= S.timeline.length - 1) S.current = 0;
     S.playing = true;
@@ -5118,6 +6239,10 @@ void main() {
 
   function toggleFlare() {
     if (!S.b) return;
+    if (S.walk.active) {
+      showToast('EVA walk active · Esc exits before SPE drill');
+      return;
+    }
     if (S.flare) {
       S.flare = null;
       S.abort.clear();
@@ -5197,6 +6322,7 @@ void main() {
     // Field Visor: panorama orbit/pinch plus compact scrubber & media toggle.
     bindPanoControls();
     bindMosaicControls();
+    bindWalkControls();
     updateProvenanceBadge();
     const panoBtn = $('visorPanoBtn');
     const photoBtn = $('visorPhotoBtn');
@@ -5336,6 +6462,7 @@ void main() {
     window.addEventListener('mouseup', () => { scrubbingProf = false; });
 
     document.addEventListener('keydown', (e) => {
+      if (S.walk.active) { handleWalkKeyDown(e); return; }
       if (e.target && e.target.matches('input, select, textarea, button, a')) return;
       if (e.key === 'ArrowRight') {
         e.preventDefault();
@@ -5356,6 +6483,10 @@ void main() {
         togglePlayback();
       }
     });
+    document.addEventListener('keyup', (e) => {
+      if (S.walk.active) handleWalkKeyUp(e);
+    });
+    window.addEventListener('blur', () => { S.walk.keys.clear(); });
 
     window.addEventListener('resize', () => { updateChromeHeight(); drawMap(); drawProfile(); schedulePanoDraw(); drawMosaic(); });
     if (window.ResizeObserver) {

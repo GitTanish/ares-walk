@@ -13,6 +13,7 @@ The current plan is **646.7 m, 44.3 minutes, and 194.2 Wh**. All **10/10** stati
 - A committed route, 45-step timeline, and station telemetry for the Altadena boxwork.
 - A **Tactical GIS Console** with a pan/zoom terrain map, layer toggles, station cards, Mastcam thumbnails, profile chart, scrubber, and custom waypoints.
 - A **Field Visor & Mastcam** explorer with photographic street views, filmstrip, previous/next station navigation, and a PiP mini-map.
+- A **first-person EVA walk** along the certified route: terrain-following camera, live PLSS margin, accelerated science dwells, and keyboard or touch controls.
 - An in-browser **SPE shelter drill** that aborts unvisited stations, solves a minimum-time return path, and reports dose versus time to shelter.
 - A verification sheet at `assets/mount_sharp_eva_plan.png`.
 - An honest account of what is real, what is modeled, and what this should not be used for.
@@ -63,7 +64,7 @@ If you change the physics constants in `src/mars_eva_engine.py`, rebuild the bun
 ## Repository map
 
 ```text
-index.html                     browser app: Tactical GIS Console + Field Visor + embedded twin
+index.html                     browser app: Tactical GIS Console + Field Visor + EVA walk + embedded twin
 src/mars_eva_engine.py         terrain twin, physics, Dijkstra, reserve planner, plot
 src/pds_ingest.py              NASA waypoint/Mastcam ingest, CRS raster reprojection, bundle
 src/build_mastcam_panos.py     Mastcam mosaic builder: PDS telemetry enrichment, stitching
@@ -108,6 +109,7 @@ flowchart TB
         STATE["Mission state<br/>45 timeline steps · 10 stations"]
         CONSOLE["Tactical GIS Console<br/>map · layers · profile chart · waypoints"]
         VISOR["Field Visor & Mastcam<br/>street view · filmstrip · PiP"]
+        WALK["First-person EVA walk<br/>terrain follow · dwell · live margin"]
         SPE["SPE solver<br/>edgeTimeSec Dijkstra · dose estimate"]
     end
 
@@ -128,7 +130,9 @@ flowchart TB
     BOOT --> STATE
     STATE --> CONSOLE
     STATE --> VISOR
+    STATE --> WALK
     STATE --> SPE
+    WALK --> VISOR
     SPE --> CONSOLE
     SPE --> VISOR
 ```
@@ -138,7 +142,7 @@ flowchart TB
 | Ingest | Fetch waypoints and Mastcam metadata, verify image URLs, optionally load local rasters. | Normalized station metadata and terrain layers. |
 | Plan | Build the terrain twin, apply suited physics and RF viewsheds, solve the asymmetric route, and test the 25% reserve. | Route path, 45-step timeline, station telemetry, reserve margins. |
 | Compile | Validate and serialize the scene, render the verification sheet, and inject the downsampled fallback. | `data/mission_bundle.json`, `assets/mount_sharp_eva_plan.png`, embedded twin. |
-| Run | Load the bundle over HTTP or fall back to the embedded twin, then render and interact with the mission. | Tactical GIS Console, Field Visor, and in-browser SPE solver. |
+| Run | Load the bundle over HTTP or fall back to the embedded twin, then render and interact with the mission. | Tactical GIS Console, Field Visor, first-person EVA walk, and in-browser SPE solver. |
 
 The contract is `data/mission_bundle.json`. If the bundle is valid, the browser works.
 
@@ -235,6 +239,35 @@ Continuous comm is not required. The planner applies the 5% energy penalty when 
 
 The model assumes an unshielded suit, no geomagnetic shielding, no storm evolution, and no medical dose-rate effects. It is a decision-support demo, not a radiation-risk product.
 
+### First-person EVA walk
+
+**WALK ROUTE** in the Field Visor turns the street-view panorama into a first-person traverse. The camera spawns at the current timeline step and stays anchored to the certified polyline: free movement inside a **14 m corridor**, blocked by hazard cells and slopes above **20.5°**, with bilinear terrain following at a **1.72 m** eye height. Reaching a station within **5 m** starts its science dwell, and the walker and the timeline stay in sync in both directions.
+
+| Control | Action |
+|---|---|
+| `W` / `↑` | Walk forward |
+| `S` / `↓` | Walk backward |
+| `A` / `D` | Strafe left / right |
+| `Q` / `E` or `←` / `→` | Turn |
+| `Shift` | Sprint (1.24×) |
+| Drag | Look around |
+| `Esc` | Exit to the timeline |
+| Touch pad | Movement on coarse pointers and narrow screens |
+
+Walking speed uses the same grade and sand rules as the planner: **0.30–1.45 m/s**, with a **1.80 m/s** sprint cap. Metabolic power uses the adapted Pandolf form with the 52 kg suit/PLSS load and the **1.10** suit overhead, so the energy shown is computed from the distance and grade actually walked rather than replayed from the bundle.
+
+The walk clock runs in real time. A station dwell is **180 simulated seconds at 12×** (about 15 s real) at **150 W**, or **7.5 Wh** per station. The HUD, Field Visor top bar, and PiP show:
+
+- route distance and progress;
+- stations visited;
+- live PLSS remaining and `margin = 400 Wh − consumed − live walkback − 100 Wh floor`;
+- the next station and surface status (clear, hazard buffer, slope limit, or RF shadow);
+- the mission clock and the walked trail.
+
+Entering at step *k* marks stations with `arrivalIndex < k` as already visited, while a station at step *k* can still trigger its dwell. Completing a dwell advances the timeline to that station's `departIndex`. Exiting syncs the scrubber to the nearest timeline step; continuous route playback and station-jump navigation remain unchanged.
+
+The panorama renderer is shared with the existing street view. Walking uses a WebGL2 fast path when hardware acceleration is available and falls back to the 2D canvas renderer otherwise, including software/SwiftShader adapters. On touch layouts the movement pad replaces the keyboard legend, the HUD compacts, and the top-right PLSS card hides so the route stays visible.
+
 ## The plan
 
 | Station | Sol | Name | Route distance | Arrival | Strict margin |
@@ -273,6 +306,7 @@ Be precise about provenance. It is the difference between a simulation and a mis
 
 - **Tactical GIS Console:** mission summary, station cards with real Mastcam thumbnails, pan/zoom terrain map with docked controls, layer toggles, step scrubber, suit telemetry, PLSS/O2/water bars, reserve status, and provenance.
 - **Field Visor & Mastcam:** photographic street-view explorer with a continuous 360° terrain-twin panorama, horizon/azimuth reticle, previous/next stop navigation, Mastcam filmstrip, PiP mini-map, and PLSS/radiation overlays.
+- **First-person EVA walk:** **WALK ROUTE** enters a certified-route traverse with WASD/arrow movement, drag-look, sprint, live PLSS and walkback margin, terrain-following camera, walked trail, station arrival, and 12× science dwells. `Esc` or the header button exits and syncs the timeline.
 - **Interactive Stitched Mastcam Landmark Panoramas:** rock-rich stations (`ALT-05 Layered Spur` and `ALT-10 Upper Bench`) feature multi-frame stitched mosaics with a `MASTCAM STITCHED MOSAIC` badge. Includes pointer-captured drag-to-pan with momentum and inertia decay, mousewheel horizontal panning, double-click to reset view, and auto-centering on ultra-wide viewports. Other stations preserve the single-frame Mastcam viewer + Sol filmstrip, with automatic single-frame fallback if a mosaic fails to load.
 - **Layer Provenance Badges:** dynamic badge next to the Base Layer selector explicitly states `GENUINE PDS RASTER` (green) versus `CALIBRATED TWIN FALLBACK` (amber) with hover tooltips detailing exact PDS product IDs and SHA-256 file hashes.
 - **Visor Step-0 Polish:** at step 0, the top-left visor card displays `AT PRESSURIZED ROVER BASE · READY FOR EVA`, Previous Stop (`#streetPrev`) is disabled, and the 3D route ribbon is anchored directly beneath the astronaut's boots (~1.35 m, $z = \text{cam.z} - 1.65$).
@@ -325,7 +359,7 @@ The committed bundle was compiled with Python 3.11.9 using `--offline` (curated 
 
 ### Browser UI automated testing
 
-`tests/ui-smoke.cjs` checks the console layout at 1440, 1280, 1024, and 390 px, NASA-inspired navy/white/blue styling, bundle loading, timeline controls, visor navigation, single-frame and stitched Mastcam display, SPE activation/stand-down, and the offline `file://` fallback. External requests are blocked so the checks do not depend on NASA API availability.
+`tests/ui-smoke.cjs` checks the console layout at 1440, 1280, 1024, and 390 px, NASA-inspired navy/white/blue styling, bundle loading, timeline controls, visor navigation, single-frame and stitched Mastcam display, SPE activation/stand-down, the first-person walk (entry, HUD, keyboard movement, drag-look, touch-pad movement, station arrival, dwell completion, and exit), the offline `file://` fallback, and the absence of browser runtime errors. External requests are blocked so the checks do not depend on NASA API availability.
 
 ```powershell
 npm install --no-save --package-lock=false playwright
@@ -344,6 +378,7 @@ The interface uses a navy mission header, white instrument panels, blue navigati
 - **RF is a 2D ray trace.** No diffraction, multipath, Fresnel-zone, antenna-pattern, or rover-body blockage is modeled.
 - **The SPE dose is an operational scenario.** It ignores shielding, spectral evolution, and medical dose-rate effects. Do not use it for crew certification.
 - **PLSS energy is metabolic-equivalent**, not a battery state of charge. Heater duty cycles, drive power, and reserves beyond the stated walkback rule are not included.
+- **The EVA walk is a scenario visualization.** It follows the same modeled terrain, hazard, and metabolic conventions as the plan. It is not real-time navigation or suit control, and it does not model traction, inertial motion, or terrain-uncertainty growth.
 - **Image URLs can change.** The bundle carries fallback URLs. If all fail, the station card degrades to a labeled placeholder.
 - **There is no real-time telemetry.** Curiosity waypoints are historical. The app does not command or predict the rover.
 - **This is not a flight plan.** Use the bundle and plot for exploration, teaching, and software verification only.
