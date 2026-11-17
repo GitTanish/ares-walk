@@ -266,7 +266,7 @@ The walk clock runs in real time. A station dwell is **180 simulated seconds at 
 
 Entering at step *k* marks stations with `arrivalIndex < k` as already visited, while a station at step *k* can still trigger its dwell. Completing a dwell advances the timeline to that station's `departIndex`. Exiting syncs the scrubber to the nearest timeline step; continuous route playback and station-jump navigation remain unchanged.
 
-The panorama renderer is shared with the existing street view. Walking uses a WebGL2 fast path when hardware acceleration is available and falls back to the 2D canvas renderer otherwise, including software/SwiftShader adapters. On touch layouts the movement pad replaces the keyboard legend, the HUD compacts, and the top-right PLSS card hides so the route stays visible.
+The panorama renderer is shared with the existing street view. Walking uses the 2D canvas terrain-twin renderer on every device, throttled to roughly 30 fps; the earlier walking-only WebGL2 shader was removed because its first-frame compile could stall hardware-accelerated browsers for over a minute. On touch layouts the movement pad replaces the keyboard legend, the HUD compacts, and the top-right PLSS card hides so the route stays visible.
 
 ## The plan
 
