@@ -1,3 +1,4 @@
+<img width="250" height="250" alt="ares" src="https://github.com/user-attachments/assets/a8797163-1e93-4559-9e09-0cd94731398a" />
 # ARES-WALK
 
 **A Mars EVA planner that takes the walk home seriously.**
