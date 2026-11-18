@@ -1,6 +1,3 @@
-<img width="140" height="250" alt="680817668717542189" src="https://github.com/user-attachments/assets/0e63b1ff-f4f6-4109-8df8-9064cd4fbca5" />
-<img width="140" height="250" alt="680817668717542189" src="https://github.com/user-attachments/assets/f6c2e3ef-9a20-4dad-a103-4485cde6cdbd" />
-<img width="140" height="250" alt="680817668717542189" src="https://github.com/user-attachments/assets/fdff0c18-bdff-4817-a8d6-d193d935e0a4" />
 # ARES-WALK
 <img width="250" height="250" alt="ares" src="https://github.com/user-attachments/assets/a8797163-1e93-4559-9e09-0cd94731398a" />
 
@@ -24,9 +21,8 @@ The current plan is **646.7 m, 44.3 minutes, and 194.2 Wh**. All **10/10** stati
 
 The goal is simple: a route is not a plan until the walk home is funded.
 
-## Run it <img width="140" height="250" alt="680817668717542189" src="https://github.com/user-attachments/assets/f5fff0c6-468d-48f9-835f-785f1606e62a" />
-
-
+## Run it
+<img width="140" height="250" alt="680817668717542189" src="https://github.com/user-attachments/assets/f5fff0c6-468d-48f9-835f-785f1606e62a" />
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
