@@ -23,6 +23,8 @@ The goal is simple: a route is not a plan until the walk home is funded.
 
 ## Run it
 <img width="140" height="250" alt="680817668717542189" src="https://github.com/user-attachments/assets/f5fff0c6-468d-48f9-835f-785f1606e62a" />
+
+
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
