@@ -306,6 +306,8 @@ Be precise about provenance. It is the difference between a simulation and a mis
 - **SPE:** an operational scenario with a constant dose rate. It ignores shielding, spectral evolution, and medical dose-rate effects.
 
 ## Browser app
+<img width="800" height="445" alt="InterplanetryMartianGui" src="https://github.com/user-attachments/assets/25c13f2a-8ea7-4a2b-9a74-32e87ba5d3e3" />
+
 
 - **Tactical GIS Console:** mission summary, station cards with real Mastcam thumbnails, pan/zoom terrain map with docked controls, layer toggles, step scrubber, suit telemetry, PLSS/O2/water bars, reserve status, and provenance.
 - **Field Visor & Mastcam:** photographic street-view explorer with a continuous 360° terrain-twin panorama, horizon/azimuth reticle, previous/next stop navigation, Mastcam filmstrip, PiP mini-map, and PLSS/radiation overlays.
